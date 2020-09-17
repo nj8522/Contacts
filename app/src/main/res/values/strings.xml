@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">ContactsApp</string>
+    <string name="display_name">Display_Name</string>
+
+
+    <string name="contact_name">Contact Name</string>
+    <string name="contact_mobile_number">Mobile</string>
+    <string name="contact_work_number">Work</string>
+    <string name="contact_home_number">Home</string>
+    <string name="contact_email_home">Email Home</string>
+    <string name="contact_email_work">Email Work</string>
+    <string name="contact_organization">Home_org</string>
+    <string name="contact_user_image">Contact User Image</string>
+</resources>
