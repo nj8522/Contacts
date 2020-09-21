@@ -1,6 +1,7 @@
 package com.nash.contactsapp.adapter
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,7 @@ import com.nash.contactsapp.ui.ContactDetailActivity
 import kotlinx.android.synthetic.main.contact_list_names.view.*
 import java.io.Serializable
 
-class ContactListViewHelper(var contactSet : MutableList<ContactModel>) : RecyclerView.Adapter<ContactListViewHelper.ViewHolder>() {
+class ContactListViewHelper(var contactList : MutableList<ContactModel>) : RecyclerView.Adapter<ContactListViewHelper.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -24,9 +25,13 @@ class ContactListViewHelper(var contactSet : MutableList<ContactModel>) : Recycl
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val contactList = contactSet
+        val contactList = contactList
         val contactModel : ContactModel = contactList[position]
         holder.displayName.text = contactModel.displayName
+
+        //Id
+        holder.id  = contactModel.id
+        Log.i("id", holder.id.toString())
 
         //Name
         holder.name = contactModel.displayName!!
@@ -45,13 +50,14 @@ class ContactListViewHelper(var contactSet : MutableList<ContactModel>) : Recycl
 
     }
 
-    override fun getItemCount() = contactSet.size
+    override fun getItemCount() = contactList.size
 
 
     class ViewHolder (itemView : View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         val displayName = itemView.contact_display_names
 
+        var id : Int  = 0
         var name : String = ""
         var phoneNumber : HashMap<String, String> = hashMapOf()
         var emailId : HashMap<String, String> = hashMapOf()
@@ -77,6 +83,7 @@ class ContactListViewHelper(var contactSet : MutableList<ContactModel>) : Recycl
                 bundle.putString("image", contactImage)
                 putExtras(bundle)
 */
+                    putExtra("id", id)
                     putExtra("name", name)
                     putExtra("number", phoneNumber as Serializable)
                     putExtra("email", emailId as Serializable)

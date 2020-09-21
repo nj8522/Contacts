@@ -24,8 +24,7 @@ class ContactProvider : ContentProvider() {
 
     private val CONTACT = 1
     private val CONTACT_ID = 2
-    private val DATA = 3
-    private val DATA_ID = 4
+
 
     init {
        uriMatcher.addURI(AUTHORITY, ContactAppContract.ContactAppEntry.TABLE_NAME, CONTACT)
@@ -34,7 +33,9 @@ class ContactProvider : ContentProvider() {
 
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
-        TODO("Implement this to handle requests to delete one or more rows")
+        val row = db.delete(ContactAppContract.ContactAppEntry.TABLE_NAME, selection, null)
+        context!!.contentResolver.notifyChange(uri, null)
+        return row
     }
 
     override fun getType(uri: Uri): String? {
@@ -60,14 +61,16 @@ class ContactProvider : ContentProvider() {
         val myQuery = SQLiteQueryBuilder()
         myQuery.tables = ContactAppContract.ContactAppEntry.TABLE_NAME
 
-        val cursor : Cursor = myQuery.query(db, null, null, null, null, null, ContactAppContract.ContactAppEntry.CONTACTS_ID)
+        val cursor : Cursor = myQuery.query(db, null, null, null, null, null, sortOrder+" COLLATE LOCALIZED ASC")
         cursor.setNotificationUri(context!!.contentResolver, uri)
         return  cursor
     }
 
-    override fun update(
-        uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<String>?): Int {
-        TODO("Implement this to handle requests to update one or more rows.")
+    override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<String>?): Int {
+
+        val row = db.update(ContactAppContract.ContactAppEntry.TABLE_NAME, values, selection, null)
+        context!!.contentResolver.notifyChange(uri, null)
+        return row
     }
 
 

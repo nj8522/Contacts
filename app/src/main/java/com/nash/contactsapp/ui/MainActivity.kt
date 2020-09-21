@@ -1,11 +1,13 @@
 package com.nash.contactsapp.ui
 
 import android.Manifest.permission.READ_CONTACTS
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -28,12 +30,11 @@ class MainActivity : AppCompatActivity() {
 
     private val CONTACT_URI = ContactProvider.CONTENT_URI
 
-
+    var viewAdapter : ContactListViewHelper? = null
 
     var contactNameList : MutableList<ContactModel> = mutableListOf()
 
     lateinit var recyclerView: RecyclerView
-    var viewAdapter : ContactListViewHelper? = null
 
     lateinit var retrieveContactData: RetrieveContactData
 
@@ -119,7 +120,7 @@ class MainActivity : AppCompatActivity() {
             null,
             null,
             null,
-            ContactAppContract.ContactAppEntry.CONTACTS_ID
+            ContactAppContract.ContactAppEntry.CONTACTS_NAME
         )
 
         if (cursor!!.count > 0) {
@@ -130,6 +131,10 @@ class MainActivity : AppCompatActivity() {
 
                    val contactModel = ContactModel()
                    val contactId = cursor.getInt(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.CONTACTS_ID))
+
+                   //ID
+                   contactModel.id = contactId
+                   Log.i("data", contactModel.id.toString())
 
                    contactModel.displayName = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.CONTACTS_NAME))
                    Log.i("data", contactModel.displayName.toString())
@@ -189,6 +194,10 @@ class MainActivity : AppCompatActivity() {
 
         updateAdapter()
 
+    }
+
+    fun insertNewContactFab(view: View) {
+        startActivity(Intent(this, AddNewContact :: class.java))
     }
 
 
