@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -15,12 +16,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nash.contactsapp.R
 import com.nash.contactsapp.adapter.ContactListViewHelper
 import com.nash.contactsapp.contactdata.RetrieveContactData
+import com.nash.contactsapp.database.ContactAppContract
+import com.nash.contactsapp.database.DataFromProvider
 import com.nash.contactsapp.model.ContactModel
+import com.nash.contactsapp.provider.ContactProvider
 
 
 class MainActivity : AppCompatActivity() {
 
     private val CONTACT_PERMISSION = 2
+
+    private val CONTACT_URI = ContactProvider.CONTENT_URI
+
+
 
     var contactNameList : MutableList<ContactModel> = mutableListOf()
 
@@ -29,12 +37,15 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var retrieveContactData: RetrieveContactData
 
+    lateinit var dataFromProvider: DataFromProvider
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
          retrieveContactData = RetrieveContactData()
+         dataFromProvider = DataFromProvider()
 
         recyclerView = findViewById(R.id.contact_name_list)
         checkForContactPermission()
@@ -103,8 +114,81 @@ class MainActivity : AppCompatActivity() {
 
     private fun dataFromContentProvider() {
 
-         contactNameList = retrieveContactData.getContactDetails(this)
-         updateAdapter()
+        val cursor = contentResolver.query(
+            CONTACT_URI,
+            null,
+            null,
+            null,
+            ContactAppContract.ContactAppEntry.CONTACTS_ID
+        )
+
+        if (cursor!!.count > 0) {
+
+           if(cursor.moveToFirst()) {
+
+               do {
+
+                   val contactModel = ContactModel()
+                   val contactId = cursor.getInt(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.CONTACTS_ID))
+
+                   contactModel.displayName = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.CONTACTS_NAME))
+                   Log.i("data", contactModel.displayName.toString())
+                   if(cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.CONTACTS_IMAGE)) != null ) {
+                       contactModel.contactImage = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.CONTACTS_IMAGE))
+                       Log.i("data", contactModel.contactImage.toString())
+                   } else {
+                       contactModel.contactImage = ""
+                   }
+
+
+                   //Mobile
+                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.PHONE_MOBILE)) != null){
+                       contactModel.phoneNumber["Mobile"] = cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.PHONE_MOBILE))
+                       Log.i("data", contactModel.phoneNumber["Mobile"].toString())
+                   }
+
+                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.PHONE_WORK)) != null){
+                       contactModel.phoneNumber["Work"] = cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.PHONE_WORK))
+                       Log.i("data", contactModel.phoneNumber["Work"].toString())
+                   }
+
+                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.PHONE_HOME)) != null){
+                       contactModel.phoneNumber["Home"] = cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.PHONE_HOME))
+                   }
+
+
+                   //Email
+                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.EMAIL_WORK)) != null){
+                       contactModel.emailId["Work"] = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.EMAIL_WORK))
+                   }
+
+                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.EMAIL_HOME)) != null){
+                       contactModel.emailId["Home"] = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.EMAIL_HOME))
+                   }
+
+                   //Org
+                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ORGANIZATION_HOME)) != null){
+                       contactModel.organization = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.ORGANIZATION_HOME))
+                   }
+
+                   contactNameList.add(contactModel)
+
+               }  while (cursor.moveToNext())
+
+
+           }
+
+        } else {
+
+
+            val dataList = retrieveContactData.getContactDetails(this)
+            dataFromProvider.convertObjectToData(this, dataList)
+            dataFromContentProvider()
+        }
+
+
+        updateAdapter()
+
     }
 
 

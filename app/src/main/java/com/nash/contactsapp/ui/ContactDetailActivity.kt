@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -72,10 +74,20 @@ class ContactDetailActivity : AppCompatActivity() {
     }
 
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.detail_contact_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
+    }
+
+
     private fun contactUserImage() {
 
         val imageData = intent.extras?.getString("img")
-        if(imageData != null && imageData != "null") {
+        if(imageData != null && imageData != "") {
 
             image = BitmapFactory.decodeFile(imageData)
 
@@ -149,8 +161,8 @@ class ContactDetailActivity : AppCompatActivity() {
 
     private fun retrieveOrganization() {
 
-      val orgMap : HashMap<String, String> = intent.getSerializableExtra("org") as HashMap<String, String>
-      val homeOrg = orgMap["Home"]
+      val orgMap : String? = intent.extras?.getString("org")
+      val homeOrg = orgMap
 
       if(homeOrg != "" && homeOrg != null) {
           contactOrganization.text = homeOrg.toString()

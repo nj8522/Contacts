@@ -29,7 +29,7 @@ class ContactListViewHelper(var contactSet : MutableList<ContactModel>) : Recycl
         holder.displayName.text = contactModel.displayName
 
         //Name
-        holder.name = contactModel.displayName
+        holder.name = contactModel.displayName!!
 
         //Numbers
         holder.phoneNumber = contactModel.phoneNumber as HashMap
@@ -38,7 +38,7 @@ class ContactListViewHelper(var contactSet : MutableList<ContactModel>) : Recycl
         holder.emailId = contactModel.emailId as HashMap
 
         //Organization
-        holder.organization = contactModel.organization as HashMap
+        holder.organization = contactModel.organization
 
         //Image
         holder.contactImage = contactModel.contactImage.toString()
@@ -55,7 +55,7 @@ class ContactListViewHelper(var contactSet : MutableList<ContactModel>) : Recycl
         var name : String = ""
         var phoneNumber : HashMap<String, String> = hashMapOf()
         var emailId : HashMap<String, String> = hashMapOf()
-        var organization : HashMap<String, String> = hashMapOf()
+        var organization : String? = null
 
         var contactImage : String = ""
 
@@ -80,7 +80,7 @@ class ContactListViewHelper(var contactSet : MutableList<ContactModel>) : Recycl
                     putExtra("name", name)
                     putExtra("number", phoneNumber as Serializable)
                     putExtra("email", emailId as Serializable)
-                    putExtra("org", organization as Serializable)
+                    putExtra("org", organization)
                     putExtra("img", contactImage)
 
             }
