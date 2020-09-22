@@ -21,7 +21,7 @@ class DataFromProvider {
     val CONTACTS_IMAGE = "CONTACT_PHOTO"
     val PHONE_MOBILE = "PHONE_MOBILE"
     val PHONE_WORK = "PHONE_WORK"
-    val PHONE_HOME = "PHONE_HOME"
+    val PHONE_CUSTOM = "PHONE_CUSTOM"
     val EMAIL_HOME = "EMAIL_HOME"
     val EMAIL_WORK = "EMAIL_WORK"
     val ORGANIZATION_HOME = "ORGANIZATION_HOME"
@@ -53,7 +53,7 @@ class DataFromProvider {
             }
 
             if(data.phoneNumber["Home"] != null || data.phoneNumber["Home"] != "") {
-                contentValue.put(PHONE_HOME, data.phoneNumber["Home"])
+                contentValue.put(PHONE_CUSTOM, data.phoneNumber["Home"])
             }
 
             if(data.emailId["Home"] != null || data.phoneNumber["Home"] != "") {

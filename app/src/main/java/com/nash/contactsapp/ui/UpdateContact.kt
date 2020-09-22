@@ -1,30 +1,32 @@
 package com.nash.contactsapp.ui
 
-import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.nash.contactsapp.R
 import com.nash.contactsapp.provider.ContactProvider
-import org.w3c.dom.Text
+import java.io.File
+import java.io.FileOutputStream
+import java.lang.Exception
+
 
 class UpdateContact : AppCompatActivity() {
 
-    private lateinit var contactImage: ImageView
+    private lateinit var contactImage: ImageButton
 
     private lateinit var contactName: TextView
 
     private lateinit var contactMobileNumber: TextView
     private lateinit var contactWorkNumber: TextView
-    private lateinit var contactHomeNumber: TextView
+    private lateinit var contactCustomNumber: TextView
 
     private lateinit var contactWorkEmail: TextView
     private lateinit var contactHomeEmail: TextView
@@ -34,6 +36,8 @@ class UpdateContact : AppCompatActivity() {
     //Id
     private var contactPersonId : Int? = 0
 
+    //Tag Name
+    var customTagName : String = ""
 
 
     //Uri
@@ -45,10 +49,18 @@ class UpdateContact : AppCompatActivity() {
     private val CONTACTS_IMAGE = "CONTACT_PHOTO"
     private val PHONE_MOBILE = "PHONE_MOBILE"
     private val PHONE_WORK = "PHONE_WORK"
-    private val PHONE_HOME = "PHONE_HOME"
+    private val PHONE_CUSTOM = "PHONE_CUSTOM"
+    private val PHONE_CUSTOM_TAG = "TAG"
     private val EMAIL_HOME = "EMAIL_HOME"
     private val EMAIL_WORK = "EMAIL_WORK"
     private val ORGANIZATION_HOME = "ORGANIZATION_HOME"
+
+
+    //Gallery Code
+    val GALLERY = 101
+
+    //Image Uri
+    var imageUriData : String? = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +74,7 @@ class UpdateContact : AppCompatActivity() {
         //Mobile
         contactMobileNumber = findViewById(R.id.mobileNumber)
         contactWorkNumber = findViewById(R.id.workNumber)
-        contactHomeNumber = findViewById(R.id.customNumber)
+        contactCustomNumber = findViewById(R.id.customNumber)
 
         //Email
         contactHomeEmail = findViewById(R.id.email_home)
@@ -82,6 +94,7 @@ class UpdateContact : AppCompatActivity() {
         val phoneHome = intent.extras?.getString("homeNum")
         val emailWork = intent.extras?.getString("mailWork")
         val emailHome = intent.extras?.getString("mailHome")
+        val customNumTag = intent.extras?.getString("customNum")
         val organization = intent.extras?.getString("org")
 
 
@@ -122,7 +135,8 @@ class UpdateContact : AppCompatActivity() {
         }
 
         if (phoneHome != null || phoneHome == "") {
-            contactHomeNumber.text = phoneHome
+            customTagName = customNumTag.toString()
+            contactCustomNumber.text = phoneHome
         }
 
         if (emailWork != null || emailWork == "") {
@@ -136,8 +150,88 @@ class UpdateContact : AppCompatActivity() {
         if (organization != null || organization == "") {
             contactOrganization.text = organization
         }
+    }
 
 
+    fun pickImage(view: View) {
+
+       val imageIntent = Intent()
+       imageIntent.type = "image/*"
+       imageIntent.action = Intent.ACTION_GET_CONTENT
+       startActivityForResult(Intent.createChooser(imageIntent, "Pick Image"), GALLERY)
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == GALLERY && resultCode == RESULT_OK && data != null) {
+
+            val imageData = data.data
+            contactImage.setImageURI(imageData)
+
+
+            val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageData)
+            val cacheDir = this.cacheDir
+            val tempFile = File(cacheDir.path+"/contactApp$contactPersonId.png")
+
+            try {
+
+                val fileOutPutStream = FileOutputStream(tempFile)
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutPutStream)
+                fileOutPutStream.flush()
+                fileOutPutStream.close()
+                
+            }catch (e : Exception) {
+                e.printStackTrace()
+            }
+
+            imageUriData = tempFile.path
+
+        }
+    }
+
+    fun setCustomNumber(view: View) {
+
+        val builder = AlertDialog.Builder(this)
+
+        val mLayout = LinearLayout(this)
+        val customTag = EditText(this)
+        val customNumber = EditText(this)
+
+        customTag.hint = "Name"
+        customNumber.hint = "Custom Number"
+
+        customTag.setSingleLine()
+        customNumber.setSingleLine()
+
+        mLayout.orientation = LinearLayout.VERTICAL
+        mLayout.addView(customTag)
+        mLayout.addView(customNumber)
+
+        builder.setView(mLayout)
+
+        if(customNumber.text != null){
+
+            customTag.setText(customTagName)
+            customNumber.setText(contactCustomNumber.text)
+        }
+
+        if(customNumber.text != null && customTag != null) {
+
+            builder.setPositiveButton("Save") {dialogInterface, i ->
+                contactCustomNumber.text = customNumber.text.toString().trim()
+                customTagName = customTag.text.toString().trim()
+            }
+        } else {
+            Toast.makeText(this, "Text is Missing", Toast.LENGTH_SHORT).show()
+        }
+
+        builder.setNegativeButton("Cancel") {dialogInterface, i ->
+            dialogInterface.cancel()
+        }
+
+        builder.create().show()
 
     }
 
@@ -152,12 +246,19 @@ class UpdateContact : AppCompatActivity() {
             Toast.makeText(this, "Name and Mobile Fields are Empty", Toast.LENGTH_SHORT).show()
         }
 
+
+        if(contactImage.drawable != null) {
+            contentValue.put(CONTACTS_IMAGE, imageUriData)
+        }
+
+
         if(contactWorkNumber.text.isNotEmpty()) {
             contentValue.put(PHONE_WORK, contactWorkNumber.text.toString().trim())
         }
 
-        if(contactHomeNumber.text.isNotEmpty()) {
-            contentValue.put(PHONE_HOME, contactHomeNumber.text.toString().trim())
+        if(contactCustomNumber.text.isNotEmpty()) {
+            contentValue.put(PHONE_CUSTOM_TAG, customTagName.trim())
+            contentValue.put(PHONE_CUSTOM, contactCustomNumber.text.toString().trim())
         }
 
         if(contactWorkEmail.text.isNotEmpty()) {
@@ -178,7 +279,7 @@ class UpdateContact : AppCompatActivity() {
 
         if(isSuccessful > 0) {
             Toast.makeText(this, "Contact Updated", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, MainActivity :: class.java))
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
         } else {
             Toast.makeText(this, "Failed to Update", Toast.LENGTH_SHORT).show()

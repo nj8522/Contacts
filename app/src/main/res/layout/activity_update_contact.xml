@@ -11,14 +11,16 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
 
-        <ImageView
+        <ImageButton
             android:id="@+id/contact_update_image"
             android:layout_width="match_parent"
             android:layout_height="197dp"
+            android:scaleType="centerCrop"
+            android:onClick="pickImage"
             app:srcCompat="@drawable/ic_launcher_background" />
 
         <EditText
@@ -61,6 +63,7 @@
             android:ems="10"
             android:inputType="number"
             android:hint="@string/custom_number"
+            android:onClick="setCustomNumber"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="40dp"
             android:layout_marginStart="10dp"/>

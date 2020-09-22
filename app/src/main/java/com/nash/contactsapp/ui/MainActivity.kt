@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -20,6 +19,7 @@ import com.nash.contactsapp.adapter.ContactListViewHelper
 import com.nash.contactsapp.contactdata.RetrieveContactData
 import com.nash.contactsapp.database.ContactAppContract
 import com.nash.contactsapp.database.DataFromProvider
+import com.nash.contactsapp.model.AddressDetail
 import com.nash.contactsapp.model.ContactModel
 import com.nash.contactsapp.provider.ContactProvider
 
@@ -134,13 +134,14 @@ class MainActivity : AppCompatActivity() {
 
                    //ID
                    contactModel.id = contactId
-                   Log.i("data", contactModel.id.toString())
+
 
                    contactModel.displayName = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.CONTACTS_NAME))
-                   Log.i("data", contactModel.displayName.toString())
+
                    if(cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.CONTACTS_IMAGE)) != null ) {
+
                        contactModel.contactImage = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.CONTACTS_IMAGE))
-                       Log.i("data", contactModel.contactImage.toString())
+
                    } else {
                        contactModel.contactImage = ""
                    }
@@ -157,8 +158,10 @@ class MainActivity : AppCompatActivity() {
                        Log.i("data", contactModel.phoneNumber["Work"].toString())
                    }
 
-                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.PHONE_HOME)) != null){
-                       contactModel.phoneNumber["Home"] = cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.PHONE_HOME))
+                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.PHONE_CUSTOM)) != null){
+                       contactModel.phoneNumber["Home"] = cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.PHONE_CUSTOM))
+                       contactModel.customPhoneTag = cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.PHONE_CUSTOM_TaG))
+
                    }
 
 
@@ -176,10 +179,38 @@ class MainActivity : AppCompatActivity() {
                        contactModel.organization = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.ORGANIZATION_HOME))
                    }
 
+
+                   //Address
+                   val addressDetail = AddressDetail()
+
+                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_HOUSE_NO)) != null){
+                       addressDetail.addressHouseNumber = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.ADDRESS_HOUSE_NO))
+                   }
+
+                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_LINE_TWO)) != null){
+                       addressDetail.addressLineTwo = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.ADDRESS_LINE_TWO))
+                   }
+                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_CITY)) != null){
+                       addressDetail.addressCity = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.ADDRESS_CITY))
+                   }
+
+                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_STATE)) != null){
+                       addressDetail.addressState = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.ADDRESS_STATE))
+                   }
+
+                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_COUNTRY)) != null){
+                       addressDetail.addressCountry = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.ADDRESS_COUNTRY))
+                   }
+
+                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_PINCODE)) != null){
+                       addressDetail.addressPincode = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.ADDRESS_PINCODE))
+                   }
+
+                   contactModel.address["contact"] = addressDetail
+
                    contactNameList.add(contactModel)
 
                }  while (cursor.moveToNext())
-
 
            }
 

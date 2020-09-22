@@ -3,10 +3,27 @@
     <string name="display_name">Display_Name</string>
 
 
+    <string name="name">Name</string>
+    <string name="mobile_phone">Mobile</string>
+    <string name="work_phone">Work</string>
+    <string name="custom_phone">Custom</string>
+    <string name="address">Address</string>
+    <string name="work_email">Work</string>
+    <string name="home_email">Custom</string>
+    <string name="Org">Organization</string>
+
     <string name="contact_name">Contact Name</string>
     <string name="contact_mobile_number">Mobile</string>
     <string name="contact_work_number">Work</string>
     <string name="contact_home_number">Custom</string>
+
+    <string name="contact_address_street">House No</string>
+    <string name="contact_address_line_two">Address Line Two</string>
+    <string name="contact_address_city">City</string>
+    <string name="contact_address_state">State</string>
+    <string name="contact_address_country">Country</string>
+    <string name="contact_address_pincode">Pincode</string>
+
     <string name="contact_email_home">Email Home</string>
     <string name="contact_email_work">Email Work</string>
     <string name="contact_organization">Home_org</string>
@@ -31,4 +48,5 @@
     <string name="hello_world">Hello Square World!</string>
     <string name="contact_update_btn">Update</string>
     <string name="save_new_contact">Save</string>
+    <string name="user_profile_picture">User Profile Picture</string>
 </resources>
