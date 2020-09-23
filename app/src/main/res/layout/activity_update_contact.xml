@@ -15,10 +15,10 @@
         android:orientation="vertical">
 
 
-        <ImageButton
+        <ImageView
             android:id="@+id/contact_update_image"
             android:layout_width="match_parent"
-            android:layout_height="197dp"
+            android:layout_height="300dp"
             android:scaleType="centerCrop"
             android:onClick="pickImage"
             app:srcCompat="@drawable/ic_launcher_background" />
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:hint="@string/contact_name"
+            android:hint="@string/contact_name_text"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="40dp"
             android:layout_marginStart="10dp"/>
@@ -56,14 +56,53 @@
             android:layout_marginEnd="40dp"
             android:layout_marginStart="10dp"/>
 
-        <EditText
+        <TextView
             android:id="@+id/customNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="number"
             android:hint="@string/custom_number"
-            android:onClick="setCustomNumber"
+            android:onClick="updateCustomNumber"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginStart="10dp"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/contact_address_text"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="10dp"/>
+
+
+        <EditText
+            android:id="@+id/update_address_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:hint="@string/contact_home_text"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginStart="10dp"/>
+
+        <EditText
+            android:id="@+id/update_address_work"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:hint="@string/contact_work_text"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginStart="10dp"/>
+
+        <TextView
+            android:id="@+id/update_address_custom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="updateAddressCustom"
+            android:hint="@string/contact_custom_text"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="40dp"
             android:layout_marginStart="10dp"/>
@@ -83,9 +122,18 @@
             android:id="@+id/email_work"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="40dp"
             android:ems="10"
-            android:inputType="textEmailAddress"
-            android:hint="@string/email_work"
+            android:hint="@string/contact_email_work"
+            android:inputType="textEmailAddress" />
+
+        <TextView
+            android:id="@+id/email_custom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="updateEmailCustom"
+            android:hint="@string/contact_custom_text"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="40dp"
             android:layout_marginStart="10dp"/>

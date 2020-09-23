@@ -12,18 +12,22 @@ class DataFromProvider {
 
     val contentValue = ContentValues()
 
-    val contactProvider = ContactProvider()
 
 
-
-    val CONTACTS_ID = "_ID"
     val CONTACTS_NAME = "CONTACT_NAME"
     val CONTACTS_IMAGE = "CONTACT_PHOTO"
     val PHONE_MOBILE = "PHONE_MOBILE"
     val PHONE_WORK = "PHONE_WORK"
     val PHONE_CUSTOM = "PHONE_CUSTOM"
+    val PHONE_CUSTOM_TaG = "PHONE_TAG"
+    val ADDRESS_WORK = "ADDRESS_WORK"
+    val ADDRESS_HOME = "ADDRESS_HOME"
+    val ADDRESS_CUSTOM = "ADDRESS_CUSTOM"
+    val ADDRESS_TAG = "ADDRESS_TAG"
     val EMAIL_HOME = "EMAIL_HOME"
     val EMAIL_WORK = "EMAIL_WORK"
+    val EMAIL_CUSTOM = "EMAIL_CUSTOM"
+    val EMAIL_TAG = "EMAIL_TAG"
     val ORGANIZATION_HOME = "ORGANIZATION_HOME"
 
     fun convertObjectToData(context : Context, contactList : MutableList<ContactModel>) {

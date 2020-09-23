@@ -13,7 +13,8 @@ import com.nash.contactsapp.ui.ContactDetailActivity
 import kotlinx.android.synthetic.main.contact_list_names.view.*
 import java.io.Serializable
 
-class ContactListViewHelper(var contactList : MutableList<ContactModel>) : RecyclerView.Adapter<ContactListViewHelper.ViewHolder>() {
+class ContactListViewHelper(var contactList: MutableList<ContactModel>) :
+    RecyclerView.Adapter<ContactListViewHelper.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,11 +28,11 @@ class ContactListViewHelper(var contactList : MutableList<ContactModel>) : Recyc
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val contactList = contactList
-        val contactModel : ContactModel = contactList[position]
+        val contactModel: ContactModel = contactList[position]
         holder.displayName.text = contactModel.displayName
 
         //Id
-        holder.id  = contactModel.id
+        holder.id = contactModel.id
         Log.i("id", holder.id.toString())
 
         //Name
@@ -39,9 +40,16 @@ class ContactListViewHelper(var contactList : MutableList<ContactModel>) : Recyc
 
         //Numbers
         holder.phoneNumber = contactModel.phoneNumber as HashMap
+        holder.customPhoneTag = contactModel.customPhoneTag
+
+        //Address
+        holder.address = contactModel.address as HashMap
+        holder.addressTag = contactModel.customAddressTag
 
         //Email
         holder.emailId = contactModel.emailId as HashMap
+        holder.emailTag = contactModel.customEmailTag
+
 
         //Organization
         holder.organization = contactModel.organization
@@ -49,65 +57,58 @@ class ContactListViewHelper(var contactList : MutableList<ContactModel>) : Recyc
         //Image
         holder.contactImage = contactModel.contactImage.toString()
 
-        //Address
-        holder.address = contactModel.address as HashMap
-
-        //Phone Tag
-        holder.customPhoneTag = contactModel.customPhoneTag
 
     }
 
     override fun getItemCount() = contactList.size
 
 
-    class ViewHolder (itemView : View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         val displayName = itemView.contact_display_names
 
-        var id : Int  = 0
-        var name : String? = ""
-        var customPhoneTag : String? = ""
-        var phoneNumber : HashMap<String, String> = hashMapOf()
-        var emailId : HashMap<String, String> = hashMapOf()
-        var organization : String? = null
+        var id: Int = 0
 
-        var contactImage : String = ""
+        var contactImage: String = ""
 
-        var address : HashMap<String, AddressDetail> = hashMapOf()
+        var name: String? = ""
+
+        var customPhoneTag: String? = ""
+        var phoneNumber: HashMap<String, String> = hashMapOf()
+
+        var address: HashMap<String, String> = hashMapOf()
+        var addressTag: String? = ""
+
+        var emailId: HashMap<String, String> = hashMapOf()
+        var emailTag: String? = ""
+
+        var organization: String? = null
+
 
         init {
             itemView.setOnClickListener(this)
         }
 
 
-
         override fun onClick(v: View?) {
 
-            val intent = Intent(v?.context, ContactDetailActivity :: class.java).apply {
+            val intent = Intent(v?.context, ContactDetailActivity::class.java).apply {
 
-                /*val bundle = Bundle()
-                bundle.putString("name", name)
-                bundle.putString("number", primaryNumber)
-                bundle.putString("email", emailId)
-                bundle.putString("org", organization)
-                bundle.putString("image", contactImage)
-                putExtras(bundle)
-*/
-                    putExtra("id", id)
-                    putExtra("name", name)
-                    putExtra("number", phoneNumber as Serializable)
-                    putExtra("customNum", customPhoneTag)
-                    putExtra("email", emailId as Serializable)
-                    putExtra("org", organization)
-                    putExtra("img", contactImage)
-                    putExtra("address", address as Serializable)
-
+                putExtra("id", id)
+                putExtra("name", name)
+                putExtra("number", phoneNumber as Serializable)
+                putExtra("customNum", customPhoneTag)
+                putExtra("address", address)
+                putExtra("customAdd", addressTag)
+                putExtra("email", emailId as Serializable)
+                putExtra("customMail", emailTag)
+                putExtra("org", organization)
+                putExtra("img", contactImage)
             }
+
             v!!.context.startActivities(arrayOf(intent))
 
         }
-
-
     }
 
 

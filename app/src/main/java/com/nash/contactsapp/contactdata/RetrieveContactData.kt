@@ -18,27 +18,12 @@ class RetrieveContactData {
     var contactDataId : String? = null
     var dataSelection : String? = null
 
-    //Data Base Values
-    /*val CONTACTS_ID = "_ID"
-    val CONTACTS_NAME = "CONTACT_NAME"
-    val CONTACTS_IMAGE = "CONTACT_PHOTO"
-    val PHONE_MOBILE = "PHONE_MOBILE"
-    val PHONE_WORK = "PHONE_WORK"
-    val PHONE_HOME = "PHONE_HOME"
-    val EMAIL_HOME = "EMAIL_HOME"
-    val EMAIL_WORK = "EMAIL_WORK"
-    val ORGANIZATION_HOME = "ORGANIZATION_HOME"*/
 
 
     fun getContactDetails(context: Context) : MutableList<ContactModel>{
 
 
-
-         val contactDataList : MutableList<ContactModel> = mutableListOf()
-
-        //Content Resolver
-        /*val resolver = context.contentResolver
-        val contentValue = ContentValues()*/
+        val contactDataList : MutableList<ContactModel> = mutableListOf()
 
         //Uri
         val contactUri = ContactsContract.Contacts.CONTENT_URI

@@ -11,6 +11,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!--User Image-->
+
         <ImageView
             android:id="@+id/contact_image"
             android:layout_width="match_parent"
@@ -19,11 +21,14 @@
             android:scaleType="centerCrop"
             tools:srcCompat="@tools:sample/avatars" />
 
+        <!--Contact Name -->
+
         <LinearLayout
             android:id="@+id/linear_layout_one"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginBottom="4dp">
 
 
             <TextView
@@ -32,7 +37,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="4dp"
                 android:padding="6dp"
-                android:text="@string/name" />
+                android:text="@string/contact_name_text" />
 
             <TextView
                 android:id="@+id/contact_name"
@@ -40,16 +45,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="6dp"
-                android:text="@string/contact_name"
+                android:text="@string/contact_name_text"
                 android:textSize="28sp" />
 
         </LinearLayout>
+
+        <!--Contact Numbers-->
 
         <LinearLayout
             android:id="@+id/linear_layout_Two"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginBottom="4dp">
 
 
             <LinearLayout
@@ -64,7 +72,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="4dp"
                     android:padding="6dp"
-                    android:text="@string/mobile_phone" />
+                    android:text="@string/contact_mobile_text" />
 
                 <TextView
                     android:id="@+id/contact_mobile_number"
@@ -73,7 +81,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="6dp"
                     android:layout_marginBottom="10dp"
-                    android:text="@string/contact_mobile_number"
+                    android:text="@string/contact_mobile_text"
                     android:textSize="28sp" />
 
             </LinearLayout>
@@ -90,7 +98,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="4dp"
                     android:padding="6dp"
-                    android:text="@string/work_phone" />
+                    android:text="@string/contact_work_text" />
 
                 <TextView
                     android:id="@+id/contact_work_number"
@@ -98,7 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="6dp"
-                    android:text="@string/contact_work_number"
+                    android:text="@string/contact_work_text"
                     android:textSize="28sp" />
 
             </LinearLayout>
@@ -117,7 +125,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="4dp"
                     android:padding="6dp"
-                    android:text="@string/custom_phone" />
+                    android:text="@string/contact_custom_text" />
 
                 <TextView
                     android:id="@+id/contact_home_number"
@@ -125,19 +133,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="6dp"
-                    android:text="@string/contact_home_number"
+                    android:text="@string/contact_custom_text"
                     android:textSize="28sp" />
 
             </LinearLayout>
 
         </LinearLayout>
 
+       <!--   Contact Address     -->
+
         <LinearLayout
             android:id="@+id/linear_layout_Three"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
+            android:orientation="vertical"
+            android:layout_marginBottom="4dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -145,69 +155,96 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="4dp"
                 android:padding="6dp"
-                android:text="@string/address" />
+                android:text="@string/contact_address_text" />
 
-            <TextView
-                android:id="@+id/address_line_one"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/address_work_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="6dp"
-                android:text="@string/contact_address_street"
-                android:textSize="28sp" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/address_line_two"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="6dp"
-                android:text="@string/contact_address_line_two"
-                android:textSize="28sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="4dp"
+                    android:padding="6dp"
+                    android:text="@string/contact_work_text" />
 
-            <TextView
-                android:id="@+id/address_city"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="6dp"
-                android:text="@string/contact_address_city"
-                android:textSize="28sp" />
+                <TextView
+                    android:id="@+id/contact_address_work"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="4dp"
+                    android:textSize="28sp"
+                    android:text="@string/contact_address_work"/>
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/address_state"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="6dp"
-                android:text="@string/contact_address_state"
-                android:textSize="28sp" />
 
-            <TextView
-                android:id="@+id/address_country"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/address_home_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="6dp"
-                android:text="@string/contact_address_country"
-                android:textSize="28sp" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/address_pincode"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="4dp"
+                    android:padding="6dp"
+                    android:text="@string/contact_home_text" />
+
+                <TextView
+                    android:id="@+id/contact_address_home"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="4dp"
+                    android:textSize="28sp"
+                    android:text="@string/contact_address_home"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/address_custom_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="6dp"
-                android:text="@string/contact_address_pincode"
-                android:textSize="28sp" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/address_custom_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="4dp"
+                    android:padding="6dp"
+                    android:text="@string/contact_custom_text" />
+
+                <TextView
+                    android:id="@+id/contact_address_custom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="4dp"
+                    android:textSize="28sp"
+                    android:text="@string/contact_address_custom"/>
+
+
+            </LinearLayout>
 
         </LinearLayout>
+
+        <!--Contact Email -->
 
         <LinearLayout
             android:id="@+id/linear_layout_Four"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginBottom="4dp">
 
 
             <LinearLayout
@@ -222,7 +259,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="4dp"
                     android:padding="6dp"
-                    android:text="@string/work_email" />
+                    android:text="@string/contact_work_text" />
 
                 <TextView
                     android:id="@+id/contact_email_work"
@@ -236,7 +273,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/custom_email_layout"
+                android:id="@+id/home_email_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -247,10 +284,10 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="4dp"
                     android:padding="6dp"
-                    android:text="@string/home_email" />
+                    android:text="@string/contact_home_text" />
 
                 <TextView
-                    android:id="@+id/contact_email_custom"
+                    android:id="@+id/contact_email_home"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -260,13 +297,43 @@
 
             </LinearLayout>
 
+
+            <LinearLayout
+                android:id="@+id/custom_email_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/email_custom_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="4dp"
+                    android:padding="6dp"
+                    android:text="@string/contact_custom_text" />
+
+                <TextView
+                    android:id="@+id/contact_email_custom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/contact_email_custom"
+                    android:textSize="28sp" />
+
+            </LinearLayout>
+
         </LinearLayout>
+
+        <!-- Contact Organization -->
 
         <LinearLayout
             android:id="@+id/linear_layout_Five"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginBottom="4dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -274,7 +341,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="4dp"
                 android:padding="6dp"
-                android:text="@string/organization" />
+                android:text="@string/contact_org_text" />
 
             <TextView
                 android:id="@+id/contact_organization"

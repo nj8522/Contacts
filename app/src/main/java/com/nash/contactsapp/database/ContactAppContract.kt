@@ -13,14 +13,14 @@ object ContactAppContract {
             "${ContactAppEntry.PHONE_WORK} TEXT,"+
             "${ContactAppEntry.PHONE_CUSTOM} TEXT,"+
             "${ContactAppEntry.PHONE_CUSTOM_TaG} TEXT,"+
-            "${ContactAppEntry.ADDRESS_HOUSE_NO} TEXT,"+
-            "${ContactAppEntry.ADDRESS_LINE_TWO} TEXT,"+
-            "${ContactAppEntry.ADDRESS_CITY} TEXT,"+
-            "${ContactAppEntry.ADDRESS_STATE} TEXT,"+
-            "${ContactAppEntry.ADDRESS_COUNTRY} TEXT,"+
-            "${ContactAppEntry.ADDRESS_PINCODE} TEXT,"+
+            "${ContactAppEntry.ADDRESS_HOME} TEXT,"+
+            "${ContactAppEntry.ADDRESS_WORK} TEXT,"+
+            "${ContactAppEntry.ADDRESS_CUSTOM} TEXT,"+
+            "${ContactAppEntry.ADDRESS_TAG} TEXT,"+
             "${ContactAppEntry.EMAIL_HOME} TEXT," +
             "${ContactAppEntry.EMAIL_WORK} TEXT," +
+            "${ContactAppEntry.EMAIL_CUSTOM} TEXT," +
+            "${ContactAppEntry.EMAIL_TAG} TEXT," +
             "${ContactAppEntry.ORGANIZATION_HOME} TEXT)"
 
 
@@ -38,15 +38,15 @@ object ContactAppContract {
         const val PHONE_MOBILE = "PHONE_MOBILE"
         const val PHONE_WORK = "PHONE_WORK"
         const val PHONE_CUSTOM = "PHONE_CUSTOM"
-        const val PHONE_CUSTOM_TaG = "TAG"
-        const val ADDRESS_HOUSE_NO = "ADDRESS_STREET"
-        const val ADDRESS_LINE_TWO = "ADDRESS_LINE_TWO"
-        const val ADDRESS_CITY = "ADDRESS_CITY"
-        const val ADDRESS_STATE = "ADDRESS_STATE"
-        const val ADDRESS_COUNTRY = "ADDRESS_COUNTRY"
-        const val ADDRESS_PINCODE = "ADDRESS_PINCODE"
+        const val PHONE_CUSTOM_TaG = "PHONE_TAG"
+        const val ADDRESS_WORK = "ADDRESS_WORK"
+        const val ADDRESS_HOME = "ADDRESS_HOME"
+        const val ADDRESS_CUSTOM = "ADDRESS_CUSTOM"
+        const val ADDRESS_TAG = "ADDRESS_TAG"
         const val EMAIL_HOME = "EMAIL_HOME"
         const val EMAIL_WORK = "EMAIL_WORK"
+        const val EMAIL_CUSTOM = "EMAIL_CUSTOM"
+        const val EMAIL_TAG = "EMAIL_TAG"
         const val ORGANIZATION_HOME = "ORGANIZATION_HOME"
     }
 

@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -36,6 +37,8 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var recyclerView: RecyclerView
 
+    lateinit var countText : TextView
+
     lateinit var retrieveContactData: RetrieveContactData
 
     lateinit var dataFromProvider: DataFromProvider
@@ -47,6 +50,8 @@ class MainActivity : AppCompatActivity() {
 
          retrieveContactData = RetrieveContactData()
          dataFromProvider = DataFromProvider()
+
+        countText = findViewById(R.id.contactCount)
 
         recyclerView = findViewById(R.id.contact_name_list)
         checkForContactPermission()
@@ -125,7 +130,7 @@ class MainActivity : AppCompatActivity() {
 
         if (cursor!!.count > 0) {
 
-           if(cursor.moveToFirst()) {
+            if(cursor.moveToFirst()) {
 
                do {
 
@@ -141,11 +146,7 @@ class MainActivity : AppCompatActivity() {
                    if(cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.CONTACTS_IMAGE)) != null ) {
 
                        contactModel.contactImage = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.CONTACTS_IMAGE))
-
-                   } else {
-                       contactModel.contactImage = ""
                    }
-
 
                    //Mobile
                    if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.PHONE_MOBILE)) != null){
@@ -164,6 +165,21 @@ class MainActivity : AppCompatActivity() {
 
                    }
 
+                   //Address
+
+                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_HOME)) != null) {
+                       contactModel.address["Home"] = cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_HOME))
+                   }
+
+                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_WORK)) != null) {
+                       contactModel.address["Work"] = cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_WORK))
+                   }
+
+                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_CUSTOM)) != null) {
+                       contactModel.customAddressTag = cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_TAG))
+                       contactModel.address["Custom"] = cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_CUSTOM))
+                   }
+
 
                    //Email
                    if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.EMAIL_WORK)) != null){
@@ -174,45 +190,26 @@ class MainActivity : AppCompatActivity() {
                        contactModel.emailId["Home"] = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.EMAIL_HOME))
                    }
 
+                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.EMAIL_CUSTOM)) != null){
+                       contactModel.customEmailTag = cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.EMAIL_TAG))
+                       contactModel.emailId["Custom"] = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.EMAIL_CUSTOM))
+                   }
+
+
                    //Org
                    if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ORGANIZATION_HOME)) != null){
                        contactModel.organization = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.ORGANIZATION_HOME))
                    }
 
 
-                   //Address
-                   val addressDetail = AddressDetail()
-
-                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_HOUSE_NO)) != null){
-                       addressDetail.addressHouseNumber = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.ADDRESS_HOUSE_NO))
-                   }
-
-                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_LINE_TWO)) != null){
-                       addressDetail.addressLineTwo = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.ADDRESS_LINE_TWO))
-                   }
-                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_CITY)) != null){
-                       addressDetail.addressCity = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.ADDRESS_CITY))
-                   }
-
-                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_STATE)) != null){
-                       addressDetail.addressState = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.ADDRESS_STATE))
-                   }
-
-                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_COUNTRY)) != null){
-                       addressDetail.addressCountry = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.ADDRESS_COUNTRY))
-                   }
-
-                   if(cursor.getString(cursor.getColumnIndex(ContactAppContract.ContactAppEntry.ADDRESS_PINCODE)) != null){
-                       addressDetail.addressPincode = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.ADDRESS_PINCODE))
-                   }
-
-                   contactModel.address["contact"] = addressDetail
 
                    contactNameList.add(contactModel)
 
                }  while (cursor.moveToNext())
 
            }
+
+           countText.text = cursor.count.toString()
 
         } else {
 

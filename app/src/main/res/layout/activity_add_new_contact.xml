@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,111 +9,173 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!--User Picture -->
 
         <ImageView
             android:id="@+id/new_contact__image"
             android:layout_width="match_parent"
-            android:layout_height="197dp"
+            android:layout_height="300dp"
+            android:onClick="insertContactImage"
+            android:scaleType="centerCrop"
             app:srcCompat="@drawable/ic_launcher_background" />
+
+        <!--Name-->
 
         <EditText
             android:id="@+id/new_contact_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="@string/contact_update_name"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="40dp"
-            android:layout_marginStart="10dp"/>
+            android:ems="10"
+            android:hint="@string/contact_update_name"
+            android:inputType="textPersonName" />
+
+
+        <!--Phone Numbers-->
+
 
         <EditText
             android:id="@+id/new_mobileNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="number"
-            android:hint="@string/contact_mobile_number"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="40dp"
-            android:layout_marginStart="10dp"/>
+            android:ems="10"
+            android:hint="@string/contact_mobile_text"
+            android:inputType="number" />
 
         <EditText
             android:id="@+id/new_workNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="number"
-            android:hint="@string/contact_work_number"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="40dp"
-            android:layout_marginStart="10dp"/>
+            android:ems="10"
+            android:hint="@string/contact_work_text"
+            android:inputType="number" />
 
-        <EditText
+        <TextView
             android:id="@+id/new_customNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="number"
-            android:hint="@string/contact_home_number"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="40dp"
-            android:layout_marginStart="10dp"/>
+            android:hint="@string/contact_custom_text"
+            android:onClick="setNewCustomNumber" />
+
+
+        <!--Address-->
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="40dp"
+            android:text="@string/contact_address_text" />
+
+
+        <EditText
+            android:id="@+id/new_address_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="40dp"
+            android:ems="10"
+            android:hint="@string/contact_home_text"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/new_address_work"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="40dp"
+            android:ems="10"
+            android:hint="@string/contact_work_text"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/new_address_custom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="40dp"
+            android:hint="@string/contact_custom_text"
+            android:onClick="setNewCustomAddress" />
+
+        <!--Email-->
 
         <EditText
             android:id="@+id/new_email_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textEmailAddress"
-            android:hint="@string/contact_email_home"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="40dp"
-            android:layout_marginStart="10dp"/>
+            android:ems="10"
+            android:hint="@string/contact_email_home"
+            android:inputType="textEmailAddress" />
 
         <EditText
             android:id="@+id/new_email_work"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="40dp"
             android:ems="10"
-            android:inputType="textEmailAddress"
             android:hint="@string/contact_email_work"
+            android:inputType="textEmailAddress" />
+
+        <TextView
+            android:id="@+id/new_email_custom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="40dp"
-            android:layout_marginStart="10dp"/>
+            android:hint="@string/contact_custom_text"
+            android:onClick="setNewCustomEmail" />
 
+        <!--Organization-->
 
         <EditText
             android:id="@+id/new_organization"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="@string/organization"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="40dp"
-            android:layout_marginStart="10dp"/>
+            android:ems="10"
+            android:hint="@string/organization"
+            android:inputType="textPersonName" />
+
+        <!--Save Button-->
 
         <Button
             android:id="@+id/addNewContactBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:layout_marginTop="40dp"
-            android:onClick="addNewContact"
             android:layout_gravity="bottom"
+            android:layout_marginTop="40dp"
+            android:background="@color/colorPrimary"
+            android:onClick="addNewContact"
             android:text="@string/save_new_contact"
-            android:textColor="#fff"/>
+            android:textColor="#fff" />
 
 
     </LinearLayout>
-
-
-
-
 
 
 </ScrollView>

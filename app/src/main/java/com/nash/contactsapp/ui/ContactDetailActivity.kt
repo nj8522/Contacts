@@ -14,7 +14,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.nash.contactsapp.R
-import com.nash.contactsapp.model.AddressDetail
 import com.nash.contactsapp.provider.ContactProvider
 
 
@@ -28,40 +27,45 @@ class ContactDetailActivity : AppCompatActivity() {
     lateinit var contactName: TextView
 
     //Number
-    private lateinit var contact_mobile_number: TextView
-    private lateinit var contact_home_number: TextView
-    private lateinit var contact_work_number: TextView
-    private lateinit var contactCustomTag : TextView
+    private lateinit var contactMobileNumber : TextView
+    private lateinit var contactHomeNumber : TextView
+    private lateinit var contactWorkNumber : TextView
+    private lateinit var contactCustomTag  : TextView
 
     //Email
-    lateinit var contact_work_email: TextView
-    lateinit var contact_home_email: TextView
+    private lateinit var contactWorkEmail : TextView
+    private lateinit var contactHomeEmail : TextView
+    private lateinit var contactCustomEmail : TextView
+    private lateinit var customMailTag : TextView
 
     //Organization
     lateinit var contactOrganization: TextView
 
     //Address
-    lateinit var addressHouse : TextView
-    lateinit var addressLineTwo : TextView
-    lateinit var addressCity : TextView
-    lateinit var addressState : TextView
-    lateinit var addressCountry : TextView
-    lateinit var addressPincode : TextView
+    private lateinit var contactAddressHome : TextView
+    private lateinit var contactAddressWork : TextView
+    private lateinit var contactAddressCustom : TextView
+    private lateinit var customAddressTag : TextView
 
     //Layout
-    lateinit var layoutOne: LinearLayout
-    lateinit var layoutTwo: LinearLayout
-    lateinit var layoutThree: LinearLayout
-    lateinit var layoutFour: LinearLayout
-    lateinit var layoutFive : LinearLayout
+    private lateinit var layoutThree: LinearLayout
+    private lateinit var layoutFive : LinearLayout
 
-    //Inner Layout
-    lateinit var mobileNumberLayout: LinearLayout
-    lateinit var workNumberLayout: LinearLayout
-    lateinit var customNumberLayout: LinearLayout
+    //Phone Inner Layout
+    private lateinit var mobileNumberLayout: LinearLayout
+    private lateinit var workNumberLayout: LinearLayout
+    private lateinit var customNumberLayout: LinearLayout
 
-    lateinit var emailWorkLayout: LinearLayout
-    lateinit var emailCustomLayout: LinearLayout
+    //Address Inner layout
+    private lateinit var addressWorkLayout : LinearLayout
+    private lateinit var addresssHomeLayout : LinearLayout
+    private lateinit var addressCustomLayout : LinearLayout
+
+
+    //Email Inner Layout
+    private lateinit var emailWorkLayout: LinearLayout
+    private lateinit var emailHomeLayout: LinearLayout
+    private lateinit var emailCustomLayout: LinearLayout
 
 
     //Data to Update Activity
@@ -73,14 +77,22 @@ class ContactDetailActivity : AppCompatActivity() {
 
     private var updateMobile: String? = ""
     private var updateWork: String? = ""
-    private var updateHome: String? = ""
+    private var updateCustom: String? = ""
+
+    private var updateAddressHome : String = ""
+    private var updateAddressWork : String = ""
+    private var updateAddressCustom : String = ""
 
     private var updateEmailWork: String? = ""
     private var updateEmailHome: String? = ""
+    private var updateEmailCustom : String? = ""
 
     private var updateOrganization: String? = ""
 
     private var numTag : String? = ""
+    private var  addressTag : String? = ""
+    private var  emailTag : String = ""
+
 
     //uri
     private val uri = ContactProvider.CONTENT_URI
@@ -95,37 +107,46 @@ class ContactDetailActivity : AppCompatActivity() {
         contactName = findViewById(R.id.contact_name)
 
         //Mobile
-        contact_mobile_number = findViewById(R.id.contact_mobile_number)
-        contact_work_number = findViewById(R.id.contact_work_number)
-        contact_home_number = findViewById(R.id.contact_home_number)
+        contactMobileNumber = findViewById(R.id.contact_mobile_number)
+        contactWorkNumber = findViewById(R.id.contact_work_number)
+        contactHomeNumber = findViewById(R.id.contact_home_number)
         contactCustomTag = findViewById(R.id.custom_number_text)
 
         //Email
-        contact_work_email = findViewById(R.id.contact_email_work)
-        contact_home_email = findViewById(R.id.contact_email_custom)
+        contactWorkEmail = findViewById(R.id.contact_email_work)
+        contactHomeEmail = findViewById(R.id.contact_email_home)
+        contactCustomEmail = findViewById(R.id.contact_email_custom)
+        customMailTag = findViewById(R.id.email_custom_text)
+
 
         //Organization
         contactOrganization = findViewById(R.id.contact_organization)
 
         //Address
-        addressHouse = findViewById(R.id.address_line_one)
-        addressLineTwo = findViewById(R.id.address_line_two)
-        addressCity = findViewById(R.id.address_city)
-        addressState = findViewById(R.id.address_state)
-        addressCountry = findViewById(R.id.address_country)
-        addressPincode = findViewById(R.id.address_pincode)
+        contactAddressHome = findViewById(R.id.contact_address_home)
+        contactAddressWork = findViewById(R.id.contact_address_work)
+        contactAddressCustom = findViewById(R.id.contact_address_custom)
+        customAddressTag = findViewById(R.id.address_custom_text)
 
 
         //Layout
         layoutThree = findViewById(R.id.linear_layout_Three)
         layoutFive = findViewById(R.id.linear_layout_Five)
 
-        //Inner Layout
+        //Phone Inner Layout
         mobileNumberLayout = findViewById(R.id.mobile_num_layout)
         workNumberLayout = findViewById(R.id.work_num_layout)
         customNumberLayout = findViewById(R.id.custom_num_layout)
 
+        //Address Inner Layout
+        addresssHomeLayout = findViewById(R.id.address_home_layout)
+        addressWorkLayout = findViewById(R.id.address_work_layout)
+        addressCustomLayout = findViewById(R.id.address_custom_layout)
+
+
+        //Email Inner Layout
         emailWorkLayout = findViewById(R.id.work_email_layout)
+        emailHomeLayout = findViewById(R.id.home_email_layout)
         emailCustomLayout = findViewById(R.id.custom_email_layout)
 
 
@@ -163,8 +184,9 @@ class ContactDetailActivity : AppCompatActivity() {
         val imageData = intent.extras?.getString("img")
 
         updateImageData = imageData
+        Log.i("image", updateImageData)
 
-        if (imageData != null && imageData != "") {
+        if (imageData != null && imageData != "" && imageData != "null") {
 
             image = BitmapFactory.decodeFile(imageData)
 
@@ -189,24 +211,27 @@ class ContactDetailActivity : AppCompatActivity() {
     private fun retrievePhoneNumber() {
 
         val numberMap: HashMap<String, String> = intent.getSerializableExtra("number") as HashMap<String, String>
+
         val mobileNumber = numberMap["Mobile"]
         updateMobile = mobileNumber
-        Log.i("activity", mobileNumber.toString())
+
         val workNumber = numberMap["Work"]
         updateWork = workNumber
+
         val homeNumber = numberMap["Home"]
-        updateHome = homeNumber
+        updateCustom = homeNumber
+
         numTag = intent.extras?.getString("customNum")
-        Log.i("act", numTag.toString())
+
 
         if (mobileNumber != "" && mobileNumber != null) {
-            contact_mobile_number.text = mobileNumber.toString()
+            contactMobileNumber.text = mobileNumber.toString()
         } else {
             mobileNumberLayout.visibility = View.GONE
         }
 
         if (workNumber != "" && workNumber != null) {
-            contact_work_number.text = workNumber.toString()
+            contactWorkNumber.text = workNumber.toString()
         } else {
             workNumberLayout.visibility = View.GONE
             //contact_work_number.visibility = View.INVISIBLE
@@ -214,7 +239,7 @@ class ContactDetailActivity : AppCompatActivity() {
 
         if (homeNumber != "" && homeNumber != null) {
             contactCustomTag.text = numTag
-            contact_home_number.text = homeNumber.toString()
+            contactHomeNumber.text = homeNumber.toString()
         } else {
             customNumberLayout.visibility = View.GONE
             //contact_home_number.visibility = View.INVISIBLE
@@ -222,29 +247,82 @@ class ContactDetailActivity : AppCompatActivity() {
 
     }
 
+    private fun retrieveAddress() {
+
+        val addressMap : HashMap<String, String> = intent.getSerializableExtra("address") as HashMap<String, String>
+
+        val homeAddress = addressMap["Home"]
+        updateAddressHome = homeAddress.toString()
+
+        val workAddress = addressMap["Work"]
+        updateAddressWork = workAddress.toString()
+
+        val customAddress = addressMap["Custom"]
+        updateAddressCustom = customAddress.toString()
+
+        val customTag = intent.extras?.getString("customAdd")
+        addressTag = customTag.toString()
+
+        if(homeAddress != null && homeAddress != ""){
+            contactAddressHome.text = homeAddress
+        } else {
+            addresssHomeLayout.visibility = View.GONE
+        }
+
+        if(workAddress != null && workAddress != ""){
+            contactAddressWork.text = workAddress
+        } else {
+            addressWorkLayout.visibility = View.GONE
+        }
+
+        if(customAddress != null && customAddress != ""){
+            customAddressTag.text = customTag
+            contactAddressCustom.text = customAddress
+        } else {
+            addressCustomLayout.visibility = View.GONE
+        }
+
+        if(homeAddress == "" && workAddress == "" && customAddress == "") {
+            layoutThree.visibility = View.GONE
+        }
+    }
+
     private fun retrieveEmail() {
 
-        val emailMap: HashMap<String, String> =
-            intent.getSerializableExtra("email") as HashMap<String, String>
+        val emailMap: HashMap<String, String> = intent.getSerializableExtra("email") as HashMap<String, String>
         val workEmail = emailMap["Work"]
         updateEmailWork = workEmail
+
         val homeEmail = emailMap["Home"]
         updateEmailHome = homeEmail
 
+        val customEmail = emailMap["Custom"]
+        updateEmailCustom = customEmail
+
+        val customTag = intent.extras?.getString("customMail")
+        emailTag = customTag.toString()
+
+
         if (workEmail != "" && workEmail != null) {
-            contact_work_email.text = workEmail.toString()
+            contactWorkEmail.text = workEmail.toString()
         } else {
             emailWorkLayout.visibility = View.GONE
             //contact_work_email.visibility = View.INVISIBLE
         }
 
         if (homeEmail != "" && homeEmail != null) {
-            contact_home_email.text = homeEmail.toString()
+            contactHomeEmail.text = homeEmail.toString()
         } else {
-            emailCustomLayout.visibility = View.GONE
+            emailHomeLayout.visibility = View.GONE
             //contact_home_email.visibility = View.INVISIBLE
         }
 
+        if (customEmail != "" && customEmail != null) {
+            customMailTag.text = customTag
+            contactCustomEmail.text = customEmail.toString()
+        } else {
+            emailCustomLayout.visibility = View.GONE
+        }
     }
 
     private fun retrieveOrganization() {
@@ -260,51 +338,6 @@ class ContactDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun retrieveAddress() {
-
-        val addressMap : HashMap<String, AddressDetail> = intent.getSerializableExtra("address") as HashMap<String, AddressDetail>
-        val addressData = addressMap["contact"]
-
-        val houseNumber = addressData?.addressHouseNumber
-        val addressLineTwo = addressData?.addressLineTwo
-        val city = addressData?.addressCity
-        val state = addressData?.addressState
-        val country = addressData?.addressCountry
-        val pincode = addressData?.addressPincode
-
-
-        if(houseNumber != null || addressLineTwo != null || city != null || state != null || country != null || pincode != null) {
-
-            if(houseNumber != null || houseNumber != ""){
-                addressHouse.text = houseNumber
-            }
-
-            if(addressLineTwo != null || addressLineTwo != ""){
-                addressHouse.text = addressLineTwo
-            }
-
-            if(city != null ||  city != ""){
-                addressHouse.text = city
-            }
-
-            if(state != null || state != ""){
-                addressHouse.text = state
-            }
-
-            if(country != null || country != ""){
-                addressHouse.text = country
-            }
-
-            if(pincode != null || pincode != ""){
-                addressHouse.text = pincode
-            }
-
-        } else {
-            layoutThree.visibility = View.GONE
-        }
-
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {
@@ -316,10 +349,16 @@ class ContactDetailActivity : AppCompatActivity() {
                     putExtra("name", updateName)
                     putExtra("mobileNum", updateMobile)
                     putExtra("workNum", updateWork)
-                    putExtra("homeNum", updateHome)
+                    putExtra("homeNum", updateCustom)
                     putExtra("customNum", numTag)
+                    putExtra("addressHome", updateAddressHome)
+                    putExtra("addressWork", updateAddressWork)
+                    putExtra("addressCustom", updateAddressCustom)
+                    putExtra("customAddress", addressTag)
                     putExtra("mailWork", updateEmailWork)
                     putExtra("mailHome", updateEmailHome)
+                    putExtra("mailCustom", updateEmailCustom)
+                    putExtra("customMail", emailTag)
                     putExtra("org", updateOrganization)
                 }
                 this.startActivity(updateIntent)
