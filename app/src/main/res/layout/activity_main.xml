@@ -8,8 +8,6 @@
     tools:context=".ui.MainActivity">
 
 
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/contact_name_list"
         android:layout_width="match_parent"

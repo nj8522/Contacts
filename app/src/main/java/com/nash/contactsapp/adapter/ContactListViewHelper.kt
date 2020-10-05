@@ -13,8 +13,7 @@ import com.nash.contactsapp.ui.ContactDetailActivity
 import kotlinx.android.synthetic.main.contact_list_names.view.*
 import java.io.Serializable
 
-class ContactListViewHelper(var contactList: MutableList<ContactModel>) :
-    RecyclerView.Adapter<ContactListViewHelper.ViewHolder>() {
+class ContactListViewHelper(var contactList: MutableList<ContactModel>) : RecyclerView.Adapter<ContactListViewHelper.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
