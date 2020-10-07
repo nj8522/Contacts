@@ -24,15 +24,23 @@
     <string name="title_activity_update_contact">ScrollingActivity</string>
 
 
-    <string name="action_settings">Settings</string>
-    <string name="contact_update_name">Name</string>
+    <string name="action_settings">Help and feedback</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="work_number">Work Number</string>
     <string name="custom_number">Custom Number</string>
     <string name="email_home">Email Home</string>
     <string name="email_work">Email Work</string>
     <string name="organization_name">organization Name</string>
+
+
+    <!--New Layout String-->
+    <string name="contact_name">Name</string>
     <string name="organization">Organization</string>
+    <string name="contact_phone">Phone</string>
+    <string name="contact_email">Email</string>
+    <string name="contact_address">Address</string>
+    <string name="label">Label</string>
+
 
     <!--
     This string is used for square devices and overridden by hello_world in
@@ -43,4 +51,6 @@
     <string name="save_new_contact">Save</string>
     <string name="user_profile_picture">User Profile Picture</string>
     <string name="contact_count">count</string>
+    <string name="about">ABOUT</string>
+    <string name="edit_contact">Edit contact</string>
 </resources>

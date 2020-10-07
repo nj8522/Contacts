@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/image_background_blue" />
+    <item>
+        <bitmap
+            android:src="@drawable/add_a_photo"
+            android:gravity="center"/>
+    </item>
+
+</layer-list>

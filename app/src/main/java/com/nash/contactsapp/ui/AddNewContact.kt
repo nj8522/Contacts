@@ -6,12 +6,15 @@ import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.AppCompatImageButton
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.textfield.TextInputEditText
 import com.nash.contactsapp.R
 import com.nash.contactsapp.provider.ContactProvider
-import kotlinx.android.synthetic.main.activity_contact_detail.*
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.Exception
@@ -19,30 +22,47 @@ import java.util.*
 
 class AddNewContact : AppCompatActivity() {
 
-    private lateinit var contactImage: ImageView
+    private lateinit var contactImage: AppCompatImageButton
 
-    private lateinit var contactName: TextView
+    private lateinit var contactName: TextInputEditText
 
-    private lateinit var contactMobileNumber: TextView
-    private lateinit var contactWorkNumber: TextView
-    private lateinit var contactCustomNumber: TextView
-
-    private lateinit var contactAddressHome : TextView
-    private lateinit var contactAddressWork : TextView
-    private lateinit var contactCustomAddress : TextView
+    private lateinit var contactMobileNumber: TextInputEditText
+    private lateinit var contactPhoneTag : AutoCompleteTextView
 
 
-    private lateinit var contactEmailHome: TextView
-    private lateinit var contactEmailWork : TextView
-    private lateinit var contactCustomEmail: TextView
 
-    private lateinit var contactOrganization: TextView
+    /* private lateinit var contactWorkNumber: TextView
+     private lateinit var contactCustomNumber: TextView*/
+
+    private lateinit var contactAddressHome : TextInputEditText
+    private lateinit var contactAddressTag : AutoCompleteTextView
+
+
+   /* private lateinit var contactAddressWork : TextView
+    private lateinit var contactCustomAddress : TextView*/
+
+
+    private lateinit var contactEmailHome: TextInputEditText
+    private lateinit var contactEmailTag : AutoCompleteTextView
+
+
+    /*private lateinit var contactEmailWork : TextView
+    private lateinit var contactCustomEmail: TextView*/
+
+    private lateinit var contactOrganization: TextInputEditText
+
+
+    private val labels = arrayOf("Mobile", "Work", "Home","Main")
+
+
+    //AppBar
+    private lateinit var topAppBar : MaterialToolbar
 
 
     //Tag
-    private var contactTag : String? = ""
+   /* private var contactTag : String? = ""
     private var addressTag : String? = ""
-    private var emailTag : String? = ""
+    private var emailTag : String? = ""*/
 
 
     //Data
@@ -76,37 +96,75 @@ class AddNewContact : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_new_contact)
 
+
         //Image
-        contactImage = findViewById(R.id.new_contact__image)
+        contactImage = findViewById(R.id.contact_select_image)
 
         //Name
-        contactName = findViewById(R.id.new_contact_name)
+        contactName = findViewById(R.id.add_contact_name)
 
         //Contact Numbers
-        contactMobileNumber = findViewById(R.id.new_mobileNumber)
-        contactWorkNumber = findViewById(R.id.new_workNumber)
-        contactCustomNumber = findViewById(R.id.new_customNumber)
+        contactMobileNumber = findViewById(R.id.add_contact_phone)
+        contactPhoneTag = findViewById(R.id.phone_auto_complete)
+
+        /*contactWorkNumber = findViewById(R.id.new_workNumber)
+        contactCustomNumber = findViewById(R.id.new_customNumber)*/
 
         //Address
-        contactAddressHome = findViewById(R.id.new_address_home)
-        contactAddressWork = findViewById(R.id.new_address_work)
-        contactCustomAddress = findViewById(R.id.new_address_custom)
+        contactAddressHome = findViewById(R.id.add_contact_address)
+        contactAddressTag = findViewById(R.id.address_auto_complete)
+
+        /*contactAddressWork = findViewById(R.id.new_address_work)
+        contactCustomAddress = findViewById(R.id.new_address_custom)*/
 
         //Email
-        contactEmailHome = findViewById(R.id.new_email_home)
-        contactEmailWork = findViewById(R.id.new_email_work)
-        contactCustomEmail = findViewById(R.id.new_email_custom)
+        contactEmailHome = findViewById(R.id.add_contact_email)
+        contactEmailTag = findViewById(R.id.email_auto_complete)
+
+        /*contactEmailWork = findViewById(R.id.new_email_work)
+        contactCustomEmail = findViewById(R.id.new_email_custom)*/
 
         //Organization
-        contactOrganization = findViewById(R.id.new_organization)
+        contactOrganization = findViewById(R.id.add_contact_organization)
 
+
+        //Adapter
+        val labelAdapter = ArrayAdapter(this, R.layout.drop_down_menu, labels)
+        contactAddressTag.setAdapter(labelAdapter)
+        contactPhoneTag.setAdapter(labelAdapter)
+        contactEmailTag.setAdapter(labelAdapter)
+
+
+        //ToolBar
+        topAppBar = findViewById(R.id.topAppBar)
+        topAppBar.title = "Create contact"
+        setSupportActionBar(topAppBar)
+        topAppBar.setNavigationIcon(R.drawable.ic_close_18dp)
 
     }
 
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.create_contact_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when(item.itemId) {
+         R.id.save_contact -> Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
+         R.id.action_settings -> Toast.makeText(this, "Help and feedback", Toast.LENGTH_SHORT).show()
+         else -> finish()
+
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
     fun setNewCustomNumber(view: View) {
 
-        val builder = AlertDialog.Builder(this)
+     /*   val builder = AlertDialog.Builder(this)
 
         val mLayout = LinearLayout(this)
         val customTag = EditText(this)
@@ -146,12 +204,12 @@ class AddNewContact : AppCompatActivity() {
             dialogInterface.cancel()
         }
 
-        builder.create().show()
+        builder.create().show()*/
     }
 
     fun setNewCustomAddress(view: View) {
 
-        val builder = AlertDialog.Builder(this)
+       /* val builder = AlertDialog.Builder(this)
 
         val mLayout = LinearLayout(this)
         val customTag = EditText(this)
@@ -189,12 +247,12 @@ class AddNewContact : AppCompatActivity() {
             dialogInterface.cancel()
         }
 
-        builder.create().show()
+        builder.create().show()*/
     }
 
     fun setNewCustomEmail(view: View) {
 
-        val builder = AlertDialog.Builder(this)
+       /* val builder = AlertDialog.Builder(this)
 
         val mLayout = LinearLayout(this)
         val customTag = EditText(this)
@@ -232,11 +290,8 @@ class AddNewContact : AppCompatActivity() {
             dialogInterface.cancel()
         }
 
-        builder.create().show()
-
-
+        builder.create().show()*/
     }
-
 
     fun insertContactImage(view: View) {
 
@@ -276,8 +331,6 @@ class AddNewContact : AppCompatActivity() {
         }
     }
 
-
-
     fun addNewContact(view: View) {
 
         val contentValue = ContentValues()
@@ -288,37 +341,37 @@ class AddNewContact : AppCompatActivity() {
 
         /*Name and Number*/
 
-        if (contactName.text.isNotEmpty() && contactMobileNumber.text.isNotEmpty()) {
+        if (contactName.text!!.isNotEmpty() && contactMobileNumber.text!!.isNotEmpty()) {
             contentValue.put(CONTACTS_NAME, contactName.text.toString().trim())
             contentValue.put(PHONE_MOBILE, contactMobileNumber.text.toString().trim())
         } else {
             Toast.makeText(this, "Name and Mobile Fields are Empty", Toast.LENGTH_SHORT).show()
         }
 
-        if (contactWorkNumber.text.isNotEmpty()) {
+       /* if (contactWorkNumber.text.isNotEmpty()) {
             contentValue.put(PHONE_WORK, contactWorkNumber.text.toString().trim())
         }
 
         if (contactCustomNumber.text.isNotEmpty()) {
             contentValue.put(PHONE_CUSTOM_TaG, contactTag)
             contentValue.put(PHONE_CUSTOM, contactCustomNumber.text.toString().trim())
-        }
+        }*/
 
 
         /*Contact Address*/
 
-        if(contactAddressHome.text.isNotEmpty()) {
+        if(contactAddressHome.text!!.isNotEmpty()) {
             contentValue.put(ADDRESS_HOME, contactAddressHome.text.toString().trim())
         }
 
-        if(contactAddressWork.text.isNotEmpty()) {
+       /* if(contactAddressWork.text.isNotEmpty()) {
             contentValue.put(ADDRESS_WORK, contactAddressWork.text.toString().trim())
         }
 
         if(contactCustomAddress.text.isNotEmpty()) {
             contentValue.put(ADDRESS_TAG, addressTag)
             contentValue.put(ADDRESS_CUSTOM, contactAddressHome.text.toString().trim())
-        }
+        }*/
 
 
 
@@ -328,30 +381,30 @@ class AddNewContact : AppCompatActivity() {
             contentValue.put(EMAIL_HOME, contactEmailHome.text.toString())
         }
 
-        if(contactEmailWork.text != null) {
+        /*if(contactEmailWork.text != null) {
             contentValue.put(EMAIL_WORK, contactEmailWork.text.toString())
         }
 
         if(contactCustomEmail.text != null) {
             contentValue.put(EMAIL_TAG, emailTag)
             contentValue.put(EMAIL_CUSTOM, contactCustomEmail.text.toString())
-        }
+        }*/
 
 
         /*Contact Organization*/
 
-        if (contactOrganization.text.isNotEmpty()) {
+        if (contactOrganization.text!!.isNotEmpty()) {
             contentValue.put(ORGANIZATION_HOME, contactOrganization.text.toString().trim())
         }
 
 
         /*Save Button*/
 
-        if (contactName.text.isNotEmpty() && (contactMobileNumber.text.isNotEmpty() || contactWorkNumber.text.isNotEmpty() || contactCustomNumber.text.isNotEmpty())) {
+        if (contactName.text!!.isNotEmpty() && (contactMobileNumber.text!!.isNotEmpty())) {
 
             val isSuccessful = contentResolver.insert(uri, contentValue)
             Toast.makeText(this, "Contact Added", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, ContactActivity::class.java))
             finish()
         } else {
 

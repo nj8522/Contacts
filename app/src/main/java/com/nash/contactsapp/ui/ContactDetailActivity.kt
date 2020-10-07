@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.appbar.MaterialToolbar
 import com.nash.contactsapp.R
 import com.nash.contactsapp.provider.ContactProvider
 
@@ -94,6 +95,9 @@ class ContactDetailActivity : AppCompatActivity() {
     private var  emailTag : String = ""
 
 
+    //TopBar
+    private lateinit var topBar : MaterialToolbar
+
     //uri
     private val uri = ContactProvider.CONTENT_URI
 
@@ -103,7 +107,18 @@ class ContactDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_contact_detail)
 
 
-        contactUserImage = findViewById(R.id.contact_image)
+        //TopBar
+        topBar = findViewById(R.id.topAppBar)
+        topBar.title = ""
+        setSupportActionBar(topBar)
+        topBar.setNavigationIcon(R.drawable.arrow_back)
+
+
+
+
+
+
+       /* contactUserImage = findViewById(R.id.contact_image)
         contactName = findViewById(R.id.contact_name)
 
         //Mobile
@@ -147,7 +162,7 @@ class ContactDetailActivity : AppCompatActivity() {
         //Email Inner Layout
         emailWorkLayout = findViewById(R.id.work_email_layout)
         emailHomeLayout = findViewById(R.id.home_email_layout)
-        emailCustomLayout = findViewById(R.id.custom_email_layout)
+        emailCustomLayout = findViewById(R.id.custom_email_layout)*/
 
 
         contactId = intent.extras?.getInt("id")!!
@@ -156,7 +171,7 @@ class ContactDetailActivity : AppCompatActivity() {
         contactUserImage()
 
         val name = intent.extras?.getString("name")!!
-        contactName.text = name.toString()
+       /* contactName.text = name.toString()*/
         updateName = name
 
 
@@ -179,8 +194,42 @@ class ContactDetailActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    private fun contactUserImage() {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
+        when (item.itemId) {
+            R.id.delete_contact -> deleteContact()
+            else -> finish()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    fun openUpdateActivity(view: View) {
+
+        val updateIntent = Intent(this, UpdateContact::class.java).apply {
+
+            putExtra("id", contactId)
+            putExtra("image", updateImageData)
+            putExtra("name", updateName)
+            putExtra("mobileNum", updateMobile)
+            putExtra("workNum", updateWork)
+            putExtra("homeNum", updateCustom)
+            putExtra("customNum", numTag)
+            putExtra("addressHome", updateAddressHome)
+            putExtra("addressWork", updateAddressWork)
+            putExtra("addressCustom", updateAddressCustom)
+            putExtra("customAddress", addressTag)
+            putExtra("mailWork", updateEmailWork)
+            putExtra("mailHome", updateEmailHome)
+            putExtra("mailCustom", updateEmailCustom)
+            putExtra("customMail", emailTag)
+            putExtra("org", updateOrganization)
+        }
+        this.startActivity(updateIntent)
+    }
+
+    private fun contactUserImage() {
+/*
         val imageData = intent.extras?.getString("img")
 
         updateImageData = imageData
@@ -197,20 +246,20 @@ class ContactDetailActivity : AppCompatActivity() {
                 val new_image = resources.getDrawable(R.drawable.ic_launcher_background)
                 contactUserImage.setBackgroundDrawable(new_image)
 
-                /* image = BitmapFactory.decodeFile(ic_launcher_background.toString())
-                 contactUserImage.setImageBitmap(image)*/
+                *//* image = BitmapFactory.decodeFile(ic_launcher_background.toString())
+                 contactUserImage.setImageBitmap(image)*//*
             }
         } else {
 
             val new_image = resources.getDrawable(R.drawable.ic_launcher_background)
             contactUserImage.setBackgroundDrawable(new_image)
-        }
+        }*/
 
     }
 
     private fun retrievePhoneNumber() {
 
-        val numberMap: HashMap<String, String> = intent.getSerializableExtra("number") as HashMap<String, String>
+       /* val numberMap: HashMap<String, String> = intent.getSerializableExtra("number") as HashMap<String, String>
 
         val mobileNumber = numberMap["Mobile"]
         updateMobile = mobileNumber
@@ -243,13 +292,13 @@ class ContactDetailActivity : AppCompatActivity() {
         } else {
             customNumberLayout.visibility = View.GONE
             //contact_home_number.visibility = View.INVISIBLE
-        }
+        }*/
 
     }
 
     private fun retrieveAddress() {
 
-        val addressMap : HashMap<String, String> = intent.getSerializableExtra("address") as HashMap<String, String>
+      /*  val addressMap : HashMap<String, String> = intent.getSerializableExtra("address") as HashMap<String, String>
 
         val homeAddress = addressMap["Home"]
         updateAddressHome = homeAddress.toString()
@@ -284,12 +333,12 @@ class ContactDetailActivity : AppCompatActivity() {
 
         if(homeAddress == "" && workAddress == "" && customAddress == "") {
             layoutThree.visibility = View.GONE
-        }
+        }*/
     }
 
     private fun retrieveEmail() {
 
-        val emailMap: HashMap<String, String> = intent.getSerializableExtra("email") as HashMap<String, String>
+       /* val emailMap: HashMap<String, String> = intent.getSerializableExtra("email") as HashMap<String, String>
         val workEmail = emailMap["Work"]
         updateEmailWork = workEmail
 
@@ -322,12 +371,12 @@ class ContactDetailActivity : AppCompatActivity() {
             contactCustomEmail.text = customEmail.toString()
         } else {
             emailCustomLayout.visibility = View.GONE
-        }
+        }*/
     }
 
     private fun retrieveOrganization() {
 
-        val orgMap: String? = intent.extras?.getString("org")
+      /*  val orgMap: String? = intent.extras?.getString("org")
         val homeOrg = orgMap
         updateOrganization = homeOrg
 
@@ -335,39 +384,7 @@ class ContactDetailActivity : AppCompatActivity() {
             contactOrganization.text = homeOrg.toString()
         } else {
             layoutFive.visibility = View.GONE
-        }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-            R.id.update_contact -> {
-                val updateIntent = Intent(this, UpdateContact::class.java).apply {
-
-                    putExtra("id", contactId)
-                    putExtra("image", updateImageData)
-                    putExtra("name", updateName)
-                    putExtra("mobileNum", updateMobile)
-                    putExtra("workNum", updateWork)
-                    putExtra("homeNum", updateCustom)
-                    putExtra("customNum", numTag)
-                    putExtra("addressHome", updateAddressHome)
-                    putExtra("addressWork", updateAddressWork)
-                    putExtra("addressCustom", updateAddressCustom)
-                    putExtra("customAddress", addressTag)
-                    putExtra("mailWork", updateEmailWork)
-                    putExtra("mailHome", updateEmailHome)
-                    putExtra("mailCustom", updateEmailCustom)
-                    putExtra("customMail", emailTag)
-                    putExtra("org", updateOrganization)
-                }
-                this.startActivity(updateIntent)
-            }
-
-            else -> deleteContact()
-        }
-
-        return super.onOptionsItemSelected(item)
+        }*/
     }
 
     private fun deleteContact() {
@@ -378,13 +395,15 @@ class ContactDetailActivity : AppCompatActivity() {
 
         if (isSuccessful > 0) {
             Toast.makeText(this, "Contact Deleted Successfully", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, ContactActivity::class.java))
             finish()
         } else {
             Toast.makeText(this, "Failed to Delete Contact", Toast.LENGTH_SHORT).show()
         }
 
     }
+
+
 
 }
 

@@ -9,10 +9,8 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.Menu
 import android.view.View
-import android.view.WindowManager
-import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +18,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.MaterialToolbar
 import com.nash.contactsapp.R
 import com.nash.contactsapp.adapter.ContactListViewHelper
 import com.nash.contactsapp.contactdata.ConvertContactToObjects
@@ -42,24 +41,19 @@ class ContactActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
 
-    private lateinit var countText: TextView
-
     private lateinit var retrieveContactData: RetrieveContactData
 
     private lateinit var dataFromProvider: DataFromProvider
 
     private lateinit var convertContactToObjects: ConvertContactToObjects
 
-    private lateinit var progressBar: ProgressBar
+    private lateinit var searchBar : MaterialToolbar
+
+    //private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+        setContentView(R.layout.activity_contact)
 
 
         retrieveContactData = RetrieveContactData()
@@ -67,8 +61,11 @@ class ContactActivity : AppCompatActivity() {
         convertContactToObjects = ConvertContactToObjects()
 
 
-        countText = findViewById(R.id.contactCount)
-        //progressBar = findViewById(R.id.progressBar)
+
+        //progressBar = (R.id.progressBar)findViewById
+
+        searchBar = findViewById(R.id.home_search_bar)
+        setSupportActionBar(searchBar)
 
         recyclerView = findViewById(R.id.contact_name_list)
 
@@ -78,6 +75,12 @@ class ContactActivity : AppCompatActivity() {
         //Update Adapter
         updateAdapter()
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.home_contact_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
 
     @SuppressLint("ObsoleteSdkInt")
     private fun checkForContactPermission() {
@@ -158,8 +161,8 @@ class ContactActivity : AppCompatActivity() {
         if (cursor!!.count > 0) {
 
             //contactNameList = convertContactToObjects.changeDataToModelObjects(cursor)
-            countText.text = cursor.count.toString()
-            progressBar.visibility = View.INVISIBLE
+
+            //progressBar.visibility = View.INVISIBLE
 
             if (cursor.moveToFirst()) {
 
@@ -257,7 +260,7 @@ class ContactActivity : AppCompatActivity() {
 
         } else {
 
-            progressBar.visibility = View.VISIBLE
+            //progressBar.visibility = View.VISIBLE
             val dataList = retrieveContactData.getContactDetails(this)
             dataFromProvider.convertObjectToData(this, dataList)
             dataFromContentProvider()
