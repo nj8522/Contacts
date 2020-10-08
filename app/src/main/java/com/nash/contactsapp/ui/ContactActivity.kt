@@ -81,11 +81,9 @@ class ContactActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-
-    @SuppressLint("ObsoleteSdkInt")
     private fun checkForContactPermission() {
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
             if (ContextCompat.checkSelfPermission(this, READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
 
@@ -272,6 +270,5 @@ class ContactActivity : AppCompatActivity() {
     fun insertNewContactFab(view: View) {
         startActivity(Intent(this, AddNewContact::class.java))
     }
-
 
  }

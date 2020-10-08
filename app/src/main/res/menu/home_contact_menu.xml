@@ -1,11 +1,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.nash.contactsapp.ui.UpdateContact">
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+tools:context="com.nash.contactsapp.ui.UpdateContact">
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="101"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+<item
+    android:id="@+id/action_settings"
+    android:icon="@drawable/contacts"
+    android:orderInCategory="104"
+    android:title="@string/action_settings"
+    android:visible="true"
+    app:showAsAction="ifRoom" />
+
+<item
+    android:checkable="false"
+    android:icon="@drawable/outline_more_vert_24"
+    android:orderInCategory="102"
+    android:title="Menu"
+    android:visible="true"
+    app:showAsAction="ifRoom" />
+
 </menu>

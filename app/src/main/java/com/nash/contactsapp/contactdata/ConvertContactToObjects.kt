@@ -107,5 +107,4 @@ class ConvertContactToObjects {
         return objectList
     }
 
-
-}
+  }
