@@ -1,43 +1,39 @@
-package com.nash.contactsapp.contactdata
+package com.nash.contactsapp.models
 
 
 import android.content.Context
-import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.provider.ContactsContract
-import com.nash.contactsapp.model.ContactModel
+import android.util.Log
+import com.nash.contactsapp.contracts.ContactActivityContract
+import com.nash.contactsapp.database.DataFromProvider
+import com.nash.contactsapp.uidatamodel.ContactModel
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.NullPointerException
 
-class RetrieveContactData {
+class RetrieveContactDataFromProvider : ContactActivityContract.ContactModel {
 
     //Data
     var contactDataId : String? = null
     var dataSelection : String? = null
 
-    private  val context : Context? = null
+    var context : Context? = null
+
+    //Contact List
+    private val contactDataList : MutableList<ContactModel> = mutableListOf()
 
 
-    fun getContactDetails(context: Context) : MutableList<ContactModel>{
+   private fun getContactDetails(context: Context) {
 
-
-        val contactDataList : MutableList<ContactModel> = mutableListOf()
-
-        //Uri
+       //Uri
         val contactUri = ContactsContract.Contacts.CONTENT_URI
 
         //Contact Sort Order
         val sortContactInAscending = ContactsContract.Contacts.DISPLAY_NAME+" COLLATE LOCALIZED ASC"
 
         //Contact Cursor Query
-
-         var cursorContact : Cursor? = null
-
-        try {
-
-            cursorContact = context.contentResolver.query(
+       var cursorContact = context.contentResolver.query(
                 contactUri,
                 null,
                 null,
@@ -45,13 +41,7 @@ class RetrieveContactData {
                 sortContactInAscending
             )
 
-        } catch (e : NullPointerException) {
-
-            return contactDataList
-        }
-
-
-        //Contact Data Variables
+       //Contact Data Variables
         val MIMETYPE  = "MIMETYPE"
 
 
@@ -77,37 +67,21 @@ class RetrieveContactData {
 
                     do {
 
-                        var phoneMobile : String
-                        var phoneHome : String
-                        var phoneWork : String
-                        var emailHome : String
-                        var emailWork : String
-                        var orgHome   : String
-                        var imagePath : String
-
-
-                      //Mobile
+                        //Mobile
                       if(dataCursor.getString(dataCursor.getColumnIndexOrThrow(MIMETYPE)) == ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE) {
 
                           when (dataCursor.getInt(dataCursor.getColumnIndexOrThrow("data2"))) {
 
                               ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE ->
-                              {   phoneMobile = dataCursor.getString(dataCursor.getColumnIndexOrThrow("data1"))
-                                  //contentValue.put(PHONE_MOBILE, phoneMobile)
-                                  contactModel.phoneNumber["Mobile"] = phoneMobile
-                              }
+                                  contactModel.phoneNumber["Mobile"] = dataCursor.getString(dataCursor.getColumnIndexOrThrow("data1"))
+
 
                               ContactsContract.CommonDataKinds.Phone.TYPE_HOME ->
-                              {   phoneHome = dataCursor.getString(dataCursor.getColumnIndexOrThrow("data1"))
-                                  //contentValue.put(PHONE_HOME, phoneHome)
-                                  contactModel.phoneNumber["Home"] = phoneHome
-                              }
+                                  contactModel.phoneNumber["Home"] = dataCursor.getString(dataCursor.getColumnIndexOrThrow("data1"))
+
 
                               ContactsContract.CommonDataKinds.Phone.TYPE_WORK ->
-                              {   phoneWork = dataCursor.getString(dataCursor.getColumnIndexOrThrow("data1"))
-                                  //contentValue.put(PHONE_WORK, phoneWork)
-                                  contactModel.phoneNumber["Work"] = phoneWork
-                              }
+                                  contactModel.phoneNumber["Work"] = dataCursor.getString(dataCursor.getColumnIndexOrThrow("data1"))
                           }
 
                       }
@@ -119,16 +93,11 @@ class RetrieveContactData {
                           when (dataCursor.getInt(dataCursor.getColumnIndexOrThrow("data2"))) {
 
                               ContactsContract.CommonDataKinds.Email.TYPE_HOME ->
-                              {   emailHome = dataCursor.getString(dataCursor.getColumnIndexOrThrow("data1"))
-                                  //contentValue.put(EMAIL_HOME, emailHome)
-                                  contactModel.emailId["Home"] = emailHome
-                              }
+                                  contactModel.emailId["Home"] = dataCursor.getString(dataCursor.getColumnIndexOrThrow("data1"))
+
 
                               ContactsContract.CommonDataKinds.Phone.TYPE_WORK ->
-                              {   emailWork = dataCursor.getString(dataCursor.getColumnIndexOrThrow("data1"))
-                                  //contentValue.put(EMAIL_WORK, emailWork)
-                                  contactModel.emailId["Work"] = emailWork
-                              }
+                                  contactModel.emailId["Work"] = dataCursor.getString(dataCursor.getColumnIndexOrThrow("data1"))
                           }
                       }
 
@@ -140,10 +109,7 @@ class RetrieveContactData {
                           when (dataCursor.getInt(dataCursor.getColumnIndexOrThrow("data1"))) {
 
                               ContactsContract.CommonDataKinds.Email.TYPE_HOME ->
-                              {   orgHome = dataCursor.getString(dataCursor.getColumnIndexOrThrow("data4"))
-                                  //contentValue.put(ORGANIZATION_HOME, orgHome)
-                                  contactModel.organization = orgHome
-                              }
+                                  contactModel.organization = dataCursor.getString(dataCursor.getColumnIndexOrThrow("data4"))
                           }
                       }
 
@@ -167,19 +133,15 @@ class RetrieveContactData {
                               e.printStackTrace()
                           }
 
-                          imagePath = tempFile.path
-                          //contentValue.put(CONTACTS_IMAGE, imagePath)
+                          val imagePath = tempFile.path
                           contactModel.contactImage = imagePath
-                       }
+                        }
+
                       }
 
-
-                  }  while (dataCursor.moveToNext())
+                    }  while (dataCursor.moveToNext())
 
                 }
-
-                /*val result = resolver.insert(ContactProvider.CONTENT_URI, contentValue)
-                Log.i("uri", result.toString())*/
 
                 contactDataList.add(contactModel)
 
@@ -189,9 +151,21 @@ class RetrieveContactData {
 
         cursorContact.close()
 
-        return contactDataList
+   }
+
+
+    override fun generateContacts(context: Context) {
+        getContactDetails(context)
+        this.context = context
+        Log.i("mvp", "generating Contacts")
     }
 
- }
+
+    override fun insertContactsToDb() {
+        val dataFromProvider = DataFromProvider()
+        dataFromProvider.convertObjectToData(context!!, contactDataList)
+    }
+
+}
 
 

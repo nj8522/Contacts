@@ -1,7 +1,6 @@
-package com.nash.contactsapp.model
+package com.nash.contactsapp.uidatamodel
 
 import java.io.Serializable
-import java.io.StringReader
 
 
 class ContactModel {
@@ -29,7 +28,7 @@ class ContactModel {
 
     var organization : String? = null
 
-}
+ }
 
 
   data class AddressDetail(

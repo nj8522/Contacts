@@ -7,8 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.nash.contactsapp.R
-import com.nash.contactsapp.model.AddressDetail
-import com.nash.contactsapp.model.ContactModel
+import com.nash.contactsapp.uidatamodel.ContactModel
 import com.nash.contactsapp.ui.ContactDetailActivity
 import kotlinx.android.synthetic.main.contact_list_names.view.*
 import java.io.Serializable

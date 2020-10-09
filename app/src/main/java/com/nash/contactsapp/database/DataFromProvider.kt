@@ -3,8 +3,7 @@ package com.nash.contactsapp.database
 import android.content.ContentValues
 import android.content.Context
 import android.widget.Toast
-import com.nash.contactsapp.contactdata.RetrieveContactData
-import com.nash.contactsapp.model.ContactModel
+import com.nash.contactsapp.uidatamodel.ContactModel
 import com.nash.contactsapp.provider.ContactProvider
 
 class DataFromProvider {
@@ -14,27 +13,26 @@ class DataFromProvider {
 
 
 
-    val CONTACTS_NAME = "CONTACT_NAME"
-    val CONTACTS_IMAGE = "CONTACT_PHOTO"
-    val PHONE_MOBILE = "PHONE_MOBILE"
-    val PHONE_WORK = "PHONE_WORK"
-    val PHONE_CUSTOM = "PHONE_CUSTOM"
-    val PHONE_CUSTOM_TaG = "PHONE_TAG"
-    val ADDRESS_WORK = "ADDRESS_WORK"
-    val ADDRESS_HOME = "ADDRESS_HOME"
-    val ADDRESS_CUSTOM = "ADDRESS_CUSTOM"
-    val ADDRESS_TAG = "ADDRESS_TAG"
-    val EMAIL_HOME = "EMAIL_HOME"
-    val EMAIL_WORK = "EMAIL_WORK"
-    val EMAIL_CUSTOM = "EMAIL_CUSTOM"
-    val EMAIL_TAG = "EMAIL_TAG"
-    val ORGANIZATION_HOME = "ORGANIZATION_HOME"
+    private val CONTACTS_NAME = "CONTACT_NAME"
+    private val CONTACTS_IMAGE = "CONTACT_PHOTO"
+    private val PHONE_MOBILE = "PHONE_MOBILE"
+    private val PHONE_WORK = "PHONE_WORK"
+    private val PHONE_CUSTOM = "PHONE_CUSTOM"
+    private val PHONE_CUSTOM_TaG = "PHONE_TAG"
+    private val ADDRESS_WORK = "ADDRESS_WORK"
+    private val ADDRESS_HOME = "ADDRESS_HOME"
+    private val ADDRESS_CUSTOM = "ADDRESS_CUSTOM"
+    private val ADDRESS_TAG = "ADDRESS_TAG"
+    private val EMAIL_HOME = "EMAIL_HOME"
+    private val EMAIL_WORK = "EMAIL_WORK"
+    private val EMAIL_CUSTOM = "EMAIL_CUSTOM"
+    private val EMAIL_TAG = "EMAIL_TAG"
+    private val ORGANIZATION_HOME = "ORGANIZATION_HOME"
+
+
+
 
     fun convertObjectToData(context : Context, contactList : MutableList<ContactModel>) {
-
-        //var contactList  = contactListFromMain
-
-        //contactList = retrieveContactData.getContactDetails(context)
 
         val resolver = context.contentResolver
 
@@ -76,7 +74,6 @@ class DataFromProvider {
         }
 
            Toast.makeText(context, "Contact Added Successfully", Toast.LENGTH_SHORT).show()
-
     }
 
 
