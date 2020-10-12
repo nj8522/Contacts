@@ -1,12 +1,9 @@
 package com.nash.contactsapp.ui
 
 import android.Manifest.permission.READ_CONTACTS
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -23,21 +20,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.nash.contactsapp.R
 import com.nash.contactsapp.adapter.ContactListViewHelper
-import com.nash.contactsapp.contactdata.ConvertContactToObjects
 import com.nash.contactsapp.contracts.ContactActivityContract
-import com.nash.contactsapp.models.RetrieveContactDataFromProvider
-import com.nash.contactsapp.database.ContactAppContract
-import com.nash.contactsapp.database.DataFromProvider
 import com.nash.contactsapp.presenters.ContactActivityPresenter
 import com.nash.contactsapp.uidatamodel.ContactModel
-import com.nash.contactsapp.provider.ContactProvider
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 
 
-class ContactActivity : AppCompatActivity(), ContactActivityContract.ContactView {
+class ContactActivity : AppCompatActivity() {
 
     private val CONTACT_PERMISSION = 2
-
-    private val CONTACT_URI = ContactProvider.CONTENT_URI
 
     private var viewAdapter: ContactListViewHelper? = null
 
@@ -51,6 +44,10 @@ class ContactActivity : AppCompatActivity(), ContactActivityContract.ContactView
     private var contactActivityPresenter : ContactActivityPresenter? = null
 
     private lateinit var progressBar: ProgressBar
+
+    //Coroutines
+    private val scope = CoroutineScope(IO)
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,15 +64,34 @@ class ContactActivity : AppCompatActivity(), ContactActivityContract.ContactView
 
         checkForContactPermission()
 
-        //Update Adapter
-        updateAdapter()
+        progressBar.visibility = View.VISIBLE
 
+        scope.launch {
 
+            contactActivityPresenter = ContactActivityPresenter(this@ContactActivity)
+            val isDataExists = contactActivityPresenter?.checkIfDbIsEmpty()
+            if(!isDataExists!!){
+                contactActivityPresenter?.getProviderData()
+            }
+            val dataList = contactActivityPresenter?.updateContact()
+            convertDataToMainThread(dataList!!)
+        }
     }
 
-    override fun onStart() {
-        super.onStart()
-        contactActivityPresenter = ContactActivityPresenter(this, this)
+
+    private suspend fun convertDataToMainThread(dataList : MutableList<ContactModel>) {
+
+        try {
+            withContext(Main) {
+                contactNameList = dataList!!
+                Log.i("mvp", "converting to Main")
+                progressBar.visibility = View.GONE
+                updateAdapter()
+            }
+
+        } catch (e: Exception) {
+            Log.i("error", e.toString())
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -87,11 +103,7 @@ class ContactActivity : AppCompatActivity(), ContactActivityContract.ContactView
 
         if (ContextCompat.checkSelfPermission(this, READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             requestReadContactPermission()
-
-            } else {
-
-                 Toast.makeText(this, "You Have given the Permission", Toast.LENGTH_SHORT).show()
-            }
+        }
     }
 
     private fun requestReadContactPermission() {
@@ -140,29 +152,6 @@ class ContactActivity : AppCompatActivity(), ContactActivityContract.ContactView
 
     }
 
-    override fun initView() {
-
-        progressBar.visibility = View.VISIBLE
-
-        if(dataFromContentProvider()) {
-            Log.i("mvp", "True")
-            updateView()
-        } else {
-
-            Log.i("mvp", "false")
-            contactActivityPresenter?.getProviderData()
-        }
-    }
-
-    override fun updateView() {
-
-        val list = contactActivityPresenter?.updateContact()
-        contactNameList = list!!
-        progressBar.visibility = View.GONE
-        updateAdapter()
-        Log.i("mvp", "updated")
-    }
-
     private fun updateAdapter() {
 
         if (viewAdapter == null) {
@@ -175,22 +164,13 @@ class ContactActivity : AppCompatActivity(), ContactActivityContract.ContactView
         }
     }
 
-    private fun dataFromContentProvider() : Boolean {
-
-        val cursor = contentResolver.query(
-            CONTACT_URI,
-            null,
-            null,
-            null,
-            null
-        )
-
-        if (cursor!!.count > 0) { return true }
-        return false
-    }
-
     fun insertNewContactFab(view: View) {
         startActivity(Intent(this, AddNewContact::class.java))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        contactActivityPresenter = null
     }
 
 }

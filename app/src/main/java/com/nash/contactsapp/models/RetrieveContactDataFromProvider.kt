@@ -2,17 +2,19 @@ package com.nash.contactsapp.models
 
 
 import android.content.Context
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.provider.ContactsContract
 import android.util.Log
 import com.nash.contactsapp.contracts.ContactActivityContract
-import com.nash.contactsapp.database.DataFromProvider
 import com.nash.contactsapp.uidatamodel.ContactModel
 import java.io.File
 import java.io.FileOutputStream
+import java.lang.NullPointerException
 
-class RetrieveContactDataFromProvider : ContactActivityContract.ContactModel {
+class RetrieveContactDataFromProvider :
+    ContactActivityContract.DataFromProvider {
 
     //Data
     var contactDataId : String? = null
@@ -24,22 +26,31 @@ class RetrieveContactDataFromProvider : ContactActivityContract.ContactModel {
     private val contactDataList : MutableList<ContactModel> = mutableListOf()
 
 
-   private fun getContactDetails(context: Context) {
+   internal fun getContactDetails(context: Context) : MutableList<ContactModel>{
 
        //Uri
         val contactUri = ContactsContract.Contacts.CONTENT_URI
+
+
 
         //Contact Sort Order
         val sortContactInAscending = ContactsContract.Contacts.DISPLAY_NAME+" COLLATE LOCALIZED ASC"
 
         //Contact Cursor Query
-       var cursorContact = context.contentResolver.query(
-                contactUri,
-                null,
-                null,
-                null,
-                sortContactInAscending
-            )
+       var cursorContact : Cursor? = null
+
+       try {
+           cursorContact = context.contentResolver.query(
+               contactUri,
+               null,
+               null,
+               null,
+               sortContactInAscending
+           )
+       } catch (e : NullPointerException){
+           return contactDataList
+       }
+
 
        //Contact Data Variables
         val MIMETYPE  = "MIMETYPE"
@@ -150,21 +161,18 @@ class RetrieveContactDataFromProvider : ContactActivityContract.ContactModel {
         }
 
         cursorContact.close()
-
+        return contactDataList
    }
 
 
-    override fun generateContacts(context: Context) {
+    override fun generateContacts(context: Context) : MutableList<ContactModel>{
         getContactDetails(context)
         this.context = context
         Log.i("mvp", "generating Contacts")
+        return contactDataList
     }
 
 
-    override fun insertContactsToDb() {
-        val dataFromProvider = DataFromProvider()
-        dataFromProvider.convertObjectToData(context!!, contactDataList)
-    }
 
 }
 

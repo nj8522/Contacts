@@ -17,8 +17,8 @@ internal class RetrieveContactDataTest {
 
     @Test
     fun checkingContactData() {
-        val mockList = retrieveContactData.getContactDetails(contactActivityMock)
-        assertFalse(mockList.size > 0)
+         val listData = retrieveContactData.getContactDetails(contactActivityMock)
+         assertFalse(listData.size > 0)
     }
 
  }

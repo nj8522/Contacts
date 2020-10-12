@@ -2,11 +2,16 @@ package com.nash.contactsapp.database
 
 import android.content.ContentValues
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
+import com.nash.contactsapp.contracts.ContactActivityContract
 import com.nash.contactsapp.uidatamodel.ContactModel
 import com.nash.contactsapp.provider.ContactProvider
 
-class DataFromProvider {
+class DataFromProvider : ContactActivityContract.InsertIntoDb {
+
+
+
 
 
     val contentValue = ContentValues()
@@ -29,10 +34,12 @@ class DataFromProvider {
     private val EMAIL_TAG = "EMAIL_TAG"
     private val ORGANIZATION_HOME = "ORGANIZATION_HOME"
 
+    override fun dataFromTheProvider(context: Context, contactList: MutableList<ContactModel>) {
+        convertObjectToData(context, contactList)
+    }
 
 
-
-    fun convertObjectToData(context : Context, contactList : MutableList<ContactModel>) {
+    private fun convertObjectToData(context : Context, contactList : MutableList<ContactModel>) {
 
         val resolver = context.contentResolver
 
@@ -73,10 +80,9 @@ class DataFromProvider {
             resolver.insert(ContactProvider.CONTENT_URI, contentValue)
         }
 
+           Log.i("mvp", "Done")
            Toast.makeText(context, "Contact Added Successfully", Toast.LENGTH_SHORT).show()
     }
-
-
 
 
 }

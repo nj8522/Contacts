@@ -40,10 +40,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/contact_name_list"
-        android:layout_width="411dp"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:paddingTop="10dp"
-        tools:layout_editor_absoluteY="330dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/home_search_bar_card">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -53,12 +56,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:onClick="insertNewContactFab"
         android:src="@drawable/ic__add"
         app:backgroundTint="@color/colorAccent"
-        app:tint="@color/whiteBackground"
-        tools:layout_editor_absoluteX="339dp"
-        tools:layout_editor_absoluteY="659dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/whiteBackground" />
 
     <ProgressBar
         android:id="@+id/progressBar"

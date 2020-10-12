@@ -3,25 +3,34 @@ package com.nash.contactsapp.contactdata
 import android.content.Context
 import android.database.Cursor
 import android.util.Log
+import com.nash.contactsapp.contracts.ContactActivityContract
 import com.nash.contactsapp.database.ContactAppContract
 import com.nash.contactsapp.provider.ContactProvider
 import com.nash.contactsapp.uidatamodel.ContactModel
+import java.lang.NullPointerException
 
-class ConvertContactToObjects {
+class ConvertContactToObjects : ContactActivityContract.LocalDb{
 
     private val objectList : MutableList<ContactModel> = mutableListOf()
+    private  val CONTACT_URI = ContactProvider.CONTENT_URI
 
-    private val CONTACT_URI = ContactProvider.CONTENT_URI
+    internal fun changeDataToModelObjects (context : Context) : MutableList<ContactModel> {
 
-    fun changeDataToModelObjects (context : Context) : MutableList<ContactModel> {
+        val cursor : Cursor?
 
-       val  cursor = context.contentResolver.query(
-            CONTACT_URI,
-            null,
-            null,
-            null,
-            ContactAppContract.ContactAppEntry.CONTACTS_NAME
-        )
+        try {
+                cursor = context.contentResolver.query(
+                CONTACT_URI,
+                null,
+                null,
+                null,
+                ContactAppContract.ContactAppEntry.CONTACTS_NAME
+            )
+
+        } catch (e : Exception) {
+
+            return objectList
+        }
 
 
 
@@ -35,8 +44,10 @@ class ConvertContactToObjects {
                 //ID
                 contactModel.id = contactId
 
+                if(cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.CONTACTS_NAME)) != null) {
+                    contactModel.displayName = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.CONTACTS_NAME))
+                }
 
-                contactModel.displayName = cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.CONTACTS_NAME))
 
                 if(cursor.getString(cursor.getColumnIndexOrThrow(ContactAppContract.ContactAppEntry.CONTACTS_IMAGE)) != null ) {
 
@@ -103,8 +114,11 @@ class ConvertContactToObjects {
 
         }
 
+        cursor.close()
         return objectList
     }
+
+    override fun getContactsFromLocalDb(context: Context) = changeDataToModelObjects(context)
 
 
 }
