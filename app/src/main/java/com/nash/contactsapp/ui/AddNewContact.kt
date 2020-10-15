@@ -15,54 +15,36 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 import com.nash.contactsapp.R
 import com.nash.contactsapp.provider.ContactProvider
+import com.nash.contactsapp.validate.ValidateContact
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.Exception
 import java.util.*
 
-class AddNewContact : AppCompatActivity() {
+class AddNewContact : AppCompatActivity(), AdapterView.OnItemClickListener {
 
     private lateinit var contactImage: AppCompatImageButton
 
     private lateinit var contactName: TextInputEditText
 
+    private lateinit var contactOrganization: TextInputEditText
+
     private lateinit var contactMobileNumber: TextInputEditText
     private lateinit var contactPhoneTag : AutoCompleteTextView
 
-
-
-    /* private lateinit var contactWorkNumber: TextView
-     private lateinit var contactCustomNumber: TextView*/
-
     private lateinit var contactAddressHome : TextInputEditText
     private lateinit var contactAddressTag : AutoCompleteTextView
-
-
-   /* private lateinit var contactAddressWork : TextView
-    private lateinit var contactCustomAddress : TextView*/
-
 
     private lateinit var contactEmailHome: TextInputEditText
     private lateinit var contactEmailTag : AutoCompleteTextView
 
 
-    /*private lateinit var contactEmailWork : TextView
-    private lateinit var contactCustomEmail: TextView*/
-
-    private lateinit var contactOrganization: TextInputEditText
-
-
     private val labels = arrayOf("Mobile", "Work", "Home","Main")
 
+    var currentTag : String = ""
 
     //AppBar
     private lateinit var topAppBar : MaterialToolbar
-
-
-    //Tag
-   /* private var contactTag : String? = ""
-    private var addressTag : String? = ""
-    private var emailTag : String? = ""*/
 
 
     //Data
@@ -91,6 +73,8 @@ class AddNewContact : AppCompatActivity() {
     //Image Data
     var imageUriData: String? = ""
 
+    private lateinit var validateContact : ValidateContact
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,29 +87,20 @@ class AddNewContact : AppCompatActivity() {
         //Name
         contactName = findViewById(R.id.add_contact_name)
 
+        //Organization
+        contactOrganization = findViewById(R.id.add_contact_organization)
+
         //Contact Numbers
         contactMobileNumber = findViewById(R.id.add_contact_phone)
         contactPhoneTag = findViewById(R.id.phone_auto_complete)
-
-        /*contactWorkNumber = findViewById(R.id.new_workNumber)
-        contactCustomNumber = findViewById(R.id.new_customNumber)*/
 
         //Address
         contactAddressHome = findViewById(R.id.add_contact_address)
         contactAddressTag = findViewById(R.id.address_auto_complete)
 
-        /*contactAddressWork = findViewById(R.id.new_address_work)
-        contactCustomAddress = findViewById(R.id.new_address_custom)*/
-
         //Email
         contactEmailHome = findViewById(R.id.add_contact_email)
         contactEmailTag = findViewById(R.id.email_auto_complete)
-
-        /*contactEmailWork = findViewById(R.id.new_email_work)
-        contactCustomEmail = findViewById(R.id.new_email_custom)*/
-
-        //Organization
-        contactOrganization = findViewById(R.id.add_contact_organization)
 
 
         //Adapter
@@ -141,6 +116,11 @@ class AddNewContact : AppCompatActivity() {
         setSupportActionBar(topAppBar)
         topAppBar.setNavigationIcon(R.drawable.ic_close_18dp)
 
+        contactPhoneTag.onItemClickListener = this
+
+
+        validateContact = ValidateContact()
+
     }
 
 
@@ -153,144 +133,12 @@ class AddNewContact : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when(item.itemId) {
-         R.id.save_contact -> Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
+         R.id.save_contact -> addNewContact()
          R.id.action_settings -> Toast.makeText(this, "Help and feedback", Toast.LENGTH_SHORT).show()
          else -> finish()
-
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    fun setNewCustomNumber(view: View) {
-
-     /*   val builder = AlertDialog.Builder(this)
-
-        val mLayout = LinearLayout(this)
-        val customTag = EditText(this)
-        val customNumber = EditText(this)
-
-        customTag.hint = "Name Tag"
-        customNumber.hint = "Custom Number"
-
-        customTag.setSingleLine()
-        customNumber.setSingleLine()
-
-        mLayout.orientation = LinearLayout.VERTICAL
-        mLayout.addView(customTag)
-        mLayout.addView(customNumber)
-
-        builder.setView(mLayout)
-
-        if(customNumber.text != null){
-
-            customTag.setText(contactTag)
-            customNumber.setText(contactCustomNumber.text)
-        }
-
-
-        if(customNumber.text != null && customTag.text != null) {
-
-            builder.setPositiveButton("Save") { dialogInterface, i ->
-                contactCustomNumber.text = customNumber.text.toString().trim()
-                contactTag = customTag.text.toString().trim()
-            }
-
-        } else {
-            Toast.makeText(this, "Text is Missing", Toast.LENGTH_SHORT).show()
-        }
-
-        builder.setNegativeButton("Cancel") {dialogInterface, i ->
-            dialogInterface.cancel()
-        }
-
-        builder.create().show()*/
-    }
-
-    fun setNewCustomAddress(view: View) {
-
-       /* val builder = AlertDialog.Builder(this)
-
-        val mLayout = LinearLayout(this)
-        val customTag = EditText(this)
-        val customNumber = EditText(this)
-
-        customTag.hint = "Name Tag"
-        customNumber.hint = "Custom Address"
-
-        customTag.setSingleLine()
-        customNumber.setSingleLine()
-
-        mLayout.orientation = LinearLayout.VERTICAL
-        mLayout.addView(customTag)
-        mLayout.addView(customNumber)
-
-        builder.setView(mLayout)
-
-        if(customNumber.text != null){
-
-            customTag.setText(addressTag)
-            customNumber.setText(contactCustomAddress.text)
-        }
-
-        if(customNumber.text != null && customTag != null) {
-
-            builder.setPositiveButton("Save") {dialogInterface, i ->
-                contactCustomAddress.text = customNumber.text.toString().trim()
-                addressTag = customTag.text.toString().trim()
-            }
-        } else {
-            Toast.makeText(this, "Text is Missing", Toast.LENGTH_SHORT).show()
-        }
-
-        builder.setNegativeButton("Cancel") {dialogInterface, i ->
-            dialogInterface.cancel()
-        }
-
-        builder.create().show()*/
-    }
-
-    fun setNewCustomEmail(view: View) {
-
-       /* val builder = AlertDialog.Builder(this)
-
-        val mLayout = LinearLayout(this)
-        val customTag = EditText(this)
-        val customNumber = EditText(this)
-
-        customTag.hint = "Name Tag"
-        customNumber.hint = "Custom Email"
-
-        customTag.setSingleLine()
-        customNumber.setSingleLine()
-
-        mLayout.orientation = LinearLayout.VERTICAL
-        mLayout.addView(customTag)
-        mLayout.addView(customNumber)
-
-        builder.setView(mLayout)
-
-        if(customNumber.text != null){
-
-            customTag.setText(emailTag)
-            customNumber.setText(contactCustomEmail.text)
-        }
-
-        if(customNumber.text != null && customTag != null) {
-
-            builder.setPositiveButton("Save") {dialogInterface, i ->
-                contactCustomEmail.text = customNumber.text.toString().trim()
-                emailTag = customTag.text.toString().trim()
-            }
-        } else {
-            Toast.makeText(this, "Text is Missing", Toast.LENGTH_SHORT).show()
-        }
-
-        builder.setNegativeButton("Cancel") {dialogInterface, i ->
-            dialogInterface.cancel()
-        }
-
-        builder.create().show()*/
     }
 
     fun insertContactImage(view: View) {
@@ -331,7 +179,11 @@ class AddNewContact : AppCompatActivity() {
         }
     }
 
-    fun addNewContact(view: View) {
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        currentTag = parent?.getItemAtPosition(position).toString()
+    }
+
+    private fun addNewContact() {
 
         val contentValue = ContentValues()
 
@@ -340,78 +192,55 @@ class AddNewContact : AppCompatActivity() {
         }
 
         /*Name and Number*/
-
-        if (contactName.text!!.isNotEmpty() && contactMobileNumber.text!!.isNotEmpty()) {
+        if (validateContact.checkContactName(contactName.text.toString())) {
             contentValue.put(CONTACTS_NAME, contactName.text.toString().trim())
-            contentValue.put(PHONE_MOBILE, contactMobileNumber.text.toString().trim())
-        } else {
-            Toast.makeText(this, "Name and Mobile Fields are Empty", Toast.LENGTH_SHORT).show()
         }
 
-       /* if (contactWorkNumber.text.isNotEmpty()) {
-            contentValue.put(PHONE_WORK, contactWorkNumber.text.toString().trim())
+        if (validateContact.checkContactPhoneNumber(contactMobileNumber.text.toString())) {
+            if (validateContact.checkContactLabel(currentTag)) {
+
+                contentValue.put(PHONE_MOBILE, contactName.text.toString().trim())
+                contentValue.put(PHONE_CUSTOM_TaG, currentTag)
+            }
+
         }
-
-        if (contactCustomNumber.text.isNotEmpty()) {
-            contentValue.put(PHONE_CUSTOM_TaG, contactTag)
-            contentValue.put(PHONE_CUSTOM, contactCustomNumber.text.toString().trim())
-        }*/
-
 
         /*Contact Address*/
-
-        if(contactAddressHome.text!!.isNotEmpty()) {
+        if(validateContact.checkUserAddress(contactAddressHome.text.toString())) {
             contentValue.put(ADDRESS_HOME, contactAddressHome.text.toString().trim())
         }
 
-       /* if(contactAddressWork.text.isNotEmpty()) {
-            contentValue.put(ADDRESS_WORK, contactAddressWork.text.toString().trim())
-        }
-
-        if(contactCustomAddress.text.isNotEmpty()) {
-            contentValue.put(ADDRESS_TAG, addressTag)
-            contentValue.put(ADDRESS_CUSTOM, contactAddressHome.text.toString().trim())
-        }*/
-
-
 
         /*Contact Email*/
-
-        if(contactEmailHome.text != null) {
+        if(validateContact.checkContactEmail(contactEmailHome.text.toString())) {
             contentValue.put(EMAIL_HOME, contactEmailHome.text.toString())
         }
-
-        /*if(contactEmailWork.text != null) {
-            contentValue.put(EMAIL_WORK, contactEmailWork.text.toString())
-        }
-
-        if(contactCustomEmail.text != null) {
-            contentValue.put(EMAIL_TAG, emailTag)
-            contentValue.put(EMAIL_CUSTOM, contactCustomEmail.text.toString())
-        }*/
 
 
         /*Contact Organization*/
 
-        if (contactOrganization.text!!.isNotEmpty()) {
+        if (validateContact.checkContactOrganization(contactOrganization.text.toString())) {
             contentValue.put(ORGANIZATION_HOME, contactOrganization.text.toString().trim())
         }
 
 
         /*Save Button*/
+        if (validateContact.checkContactName(contactName.text.toString())) {
+              if(validateContact.checkContactPhoneNumber(contactMobileNumber.text.toString()) &&
+                      validateContact.checkContactLabel(currentTag)){
+                  contentResolver.insert(uri, contentValue)
+                  Toast.makeText(this, "Contact Added", Toast.LENGTH_SHORT).show()
+                  startActivity(Intent(this, ContactActivity::class.java))
+                  finish()
+              }
+              else {
+                  Toast.makeText(this, "Please fill in Contact Number", Toast.LENGTH_SHORT).show()
+              }
+          }
+          else {
 
-        if (contactName.text!!.isNotEmpty() && (contactMobileNumber.text!!.isNotEmpty())) {
-
-            val isSuccessful = contentResolver.insert(uri, contentValue)
-            Toast.makeText(this, "Contact Added", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, ContactActivity::class.java))
-            finish()
-        } else {
-
-            Toast.makeText(this, "Please fill in Contact Name and Number", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(this, "Please fill in Contact Name", Toast.LENGTH_SHORT).show()
         }
-
     }
 
     private fun rand(start: Int, end: Int): Int {
@@ -419,5 +248,4 @@ class AddNewContact : AppCompatActivity() {
         return Random(System.nanoTime()).nextInt(end - start + 1) + start
     }
 
-
-}
+ }

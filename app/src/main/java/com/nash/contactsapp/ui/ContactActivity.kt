@@ -1,6 +1,7 @@
 package com.nash.contactsapp.ui
 
 import android.Manifest.permission.READ_CONTACTS
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -64,7 +65,6 @@ class ContactActivity : AppCompatActivity() {
 
         checkForContactPermission()
 
-        progressBar.visibility = View.VISIBLE
 
         scope.launch {
 
@@ -74,25 +74,21 @@ class ContactActivity : AppCompatActivity() {
                 contactActivityPresenter?.getProviderData()
             }
             val dataList = contactActivityPresenter?.updateContact()
-            convertDataToMainThread(dataList!!)
-        }
-    }
 
+            try {
+                withContext(Main) {
+                    contactNameList = dataList!!
+                    Log.i("mvp", "converting to Main")
+                    progressBar.visibility = View.GONE
+                    updateAdapter()
+                }
 
-    private suspend fun convertDataToMainThread(dataList : MutableList<ContactModel>) {
-
-        try {
-            withContext(Main) {
-                contactNameList = dataList!!
-                Log.i("mvp", "converting to Main")
-                progressBar.visibility = View.GONE
-                updateAdapter()
+            } catch (e: Exception) {
+                Log.i("error", e.toString())
             }
-
-        } catch (e: Exception) {
-            Log.i("error", e.toString())
         }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.home_contact_menu, menu)
@@ -102,30 +98,34 @@ class ContactActivity : AppCompatActivity() {
     private fun checkForContactPermission() {
 
         if (ContextCompat.checkSelfPermission(this, READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            progressBar.visibility = View.VISIBLE
             requestReadContactPermission()
+
         }
     }
 
     private fun requestReadContactPermission() {
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, READ_CONTACTS)) {
-            createPermissionAlertMessage()
+
+            try {
+                AlertDialog.Builder(this)
+                    .setTitle("Requires Permission")
+                    .setMessage("This App needs Permission")
+                    .setPositiveButton("Allow", DialogInterface.OnClickListener { dialog, which ->
+                        ActivityCompat.requestPermissions(this, arrayOf(READ_CONTACTS), CONTACT_PERMISSION)
+                    })
+                    .setNegativeButton("No", DialogInterface.OnClickListener { dialog, which ->
+                        takeUserToSettingsIntent()
+                    })
+                    .create().show()
+            } catch (e : Exception){
+                Log.i("error", e.toString())
+            }
+
+
         } else {
             ActivityCompat.requestPermissions(this, arrayOf(READ_CONTACTS), CONTACT_PERMISSION)
-        }
-    }
-
-    private fun createPermissionAlertMessage() {
-
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("App Does't not work without Granting Permission")
-        builder.setPositiveButton("Allow"){dialog, which ->
-            ActivityCompat.requestPermissions(this, arrayOf(READ_CONTACTS), CONTACT_PERMISSION)
-        }
-
-        builder.setNegativeButton("No"){dialog , which ->
-
-            takeUserToSettingsIntent()
         }
     }
 
@@ -136,9 +136,15 @@ class ContactActivity : AppCompatActivity() {
 
             if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
+            }
 
-            } else {
+            if(!shouldShowRequestPermissionRationale(permissions[0])){
+                takeUserToSettingsIntent()
+            }
+
+            else {
                 Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
+                takeUserToSettingsIntent()
             }
         }
     }
@@ -158,6 +164,7 @@ class ContactActivity : AppCompatActivity() {
 
             viewAdapter = ContactListViewHelper(contactNameList)
             recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.setHasFixedSize(true)
             recyclerView.adapter = viewAdapter
         } else {
             viewAdapter!!.notifyDataSetChanged()
@@ -172,6 +179,5 @@ class ContactActivity : AppCompatActivity() {
         super.onDestroy()
         contactActivityPresenter = null
     }
-
 }
 
